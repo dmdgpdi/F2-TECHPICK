@@ -12,6 +12,9 @@ import { NodeApi } from 'react-arborist';
 import { useTreeStore } from '@/shared/stores/treeStore';
 
 export default function MainPage() {
+  console.log('dsadasdsa');
+  
+
   const { focusedNode, setFocusedFolderNodeList, setFocusedLinkNodeList } =
     useTreeStore();
 
