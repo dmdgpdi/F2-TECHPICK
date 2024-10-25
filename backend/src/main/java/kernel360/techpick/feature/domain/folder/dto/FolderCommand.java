@@ -1,31 +1,38 @@
 package kernel360.techpick.feature.domain.folder.dto;
 
+import java.util.List;
+
 public class FolderCommand {
 
 	public record Create(
+		Long userId,
 		String name,
 		Long parentFolderId) {
 	}
 
 	public record Read(
+		Long userId,
 		Long folderId) {
 	}
 
 	public record Update(
+		Long userId,
 		Long folderId,
 		String name
 	) {
 	}
 
 	public record Move(
-		Long folderId,
-		Long parentFolderId,
+		Long userId,
+		List<Long> folderIdList,
+		Long destinationFolderId,
 		int orderIdx
 	) {
 	}
 
 	public record Delete(
-		Long folderId
+		Long userId,
+		List<Long> folderIdList
 	) {
 	}
 }
