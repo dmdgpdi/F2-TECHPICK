@@ -1,18 +1,36 @@
 package kernel360.techpick.feature.infrastructure.pick;
 
+import java.util.List;
+
 import kernel360.techpick.core.model.pick.Pick;
-import kernel360.techpick.core.model.user.User;
+import kernel360.techpick.core.model.pick.PickTag;
+import kernel360.techpick.core.model.tag.Tag;
+import kernel360.techpick.feature.domain.pick.dto.PickCommand;
 import kernel360.techpick.feature.domain.pick.exception.ApiPickException;
 
 public interface PickAdaptor {
 
-    Pick getPick(User user, Long pickId);
+	Pick getPick(Long pickId);
 
-    Pick savePick(Pick pick) throws ApiPickException;
+	Pick getPickUrl(Long userId, String url);
 
-    void deletePick(Pick pick);
+	List<Pick> getPickList(List<Long> idList);
 
-    void detachTagFromPick(Pick pick, Long tagId);
+	List<PickTag> getPickTagList(Long pickId);
 
-    void detachTagFromEveryPick(Long tagId);
+	Pick savePick(PickCommand.Create command) throws ApiPickException;
+
+	PickTag savePickTag(Pick pick, Tag tag);
+
+	Pick updatePick(PickCommand.Update command);
+
+	void movePickToCurrentFolder(PickCommand.Move command);
+
+	void movePickToOtherFolder(PickCommand.Move command);
+
+	void deletePickList(PickCommand.Delete command);
+
+	void detachTagFromPick(Pick pick, Long tagId);
+
+	void detachTagFromEveryPick(Long tagId);
 }

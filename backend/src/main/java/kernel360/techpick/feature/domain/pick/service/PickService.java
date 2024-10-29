@@ -1,17 +1,21 @@
 package kernel360.techpick.feature.domain.pick.service;
 
+import java.util.List;
+
 import kernel360.techpick.feature.domain.pick.dto.PickCommand;
 import kernel360.techpick.feature.domain.pick.dto.PickResult;
 
 public interface PickService {
 
-    PickResult getPick(PickCommand.Read command);
+	PickResult getPick(PickCommand.Read command);
 
-    PickResult saveNewPick(PickCommand.Create command);
+	PickResult getPickUrl(Long userId, String url);
 
-    PickResult updatePick(PickCommand.Update command);
+	PickResult saveNewPick(PickCommand.Create command);
 
-    PickResult movePick(PickCommand.Move command);
+	PickResult updatePick(PickCommand.Update command);
 
-    void deletePick(PickCommand.Delete command);
+	List<Long> movePick(PickCommand.Move command);
+
+	void deletePick(PickCommand.Delete command);
 }

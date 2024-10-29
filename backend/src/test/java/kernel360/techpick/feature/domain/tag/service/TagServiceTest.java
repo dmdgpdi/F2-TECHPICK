@@ -25,7 +25,7 @@ import kernel360.techpick.core.model.user.UserRepository;
 import kernel360.techpick.feature.domain.tag.dto.TagCommand;
 import kernel360.techpick.feature.domain.tag.dto.TagResult;
 import kernel360.techpick.feature.domain.tag.exception.ApiTagException;
-import kernel360.techpick.feature.infrastructure.user.reader.UserReader;
+import kernel360.techpick.feature.infrastructure.user.UserAdaptor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -37,7 +37,7 @@ class TagServiceTest {
 	TagService tagService;
 
 	@Autowired
-	UserReader userReader;
+	UserAdaptor userAdaptor;
 
 	@BeforeAll
 	static void setUp(@Autowired UserRepository userRepository) {
@@ -130,7 +130,7 @@ class TagServiceTest {
 			expectedOrderList.add(tagResult.id());
 		}
 
-		User user = userReader.readUser(1L);
+		User user = userAdaptor.getUser(1L);
 		user.updateTagOrderList(tagIdList);
 
 		Long targetId = expectedOrderList.get(0);
