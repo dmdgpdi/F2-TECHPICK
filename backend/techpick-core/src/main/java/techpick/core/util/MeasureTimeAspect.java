@@ -24,6 +24,6 @@ public class MeasureTimeAspect {
 		long startTime = System.currentTimeMillis();
 		joinPoint.proceed();
 		long endTime = System.currentTimeMillis();
-		log.info("{} 실행시간 : {} ms", methodName, endTime - startTime);
+		log.info("{} 실행 시간 : {} ms", methodName, endTime - startTime);
 	}
 }
