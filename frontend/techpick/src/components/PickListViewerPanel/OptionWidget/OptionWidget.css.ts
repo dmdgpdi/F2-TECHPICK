@@ -5,15 +5,15 @@ const { color } = colorThemeContract;
 
 export const SEARCH_WIDGET_WIDTH = '264px';
 
-export const widgetLayout = style({
+export const optionWidgetLayout = style({
   display: 'flex',
   borderWidth: '10px',
   border: '1px solid red', // test
-  // flexDirection: 'row',
-  // margin: '10px',
-  // width: '100%',
-  // gap: '16px',
 });
+
+export const filterWidgetLayout = style({});
+
+export const viewWidgetLayout = style({});
 
 export const inputStyle = style({
   width: '100%',
@@ -33,6 +33,14 @@ export const inputStyle = style({
   },
 });
 
-export const submitButtonLayout = style({
+export const buttonLayout = style({
   marginLeft: 'auto',
+});
+
+export const appliedFilterListLayout = style({
+  display: 'flex',
+  gap: '4px',
+  flexWrap: 'wrap',
+  padding: '4px',
+  width: '264px',
 });

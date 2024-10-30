@@ -9,11 +9,10 @@ import type {
 } from './PrefixTokenizer.type';
 
 /**
- * @author 김민규
- * @description Prefix 기준으로 문자열을 Split하는 토크나이저 구현체입니다.
+ * @description
+ *  Prefix 기준으로 문자열을 Split하는 토크나이저 구현체입니다.
  */
-export class PrefixTokenizerFactoryImpl implements TokenizerFactory {
-  // TODO: 중복된 설정 값이 들어온다면 ?
+export class PrefixTokenizerFactory implements TokenizerFactory {
   private readonly patterns: Map<TokenKey, Prefix> = new Map();
 
   addPattern(pattern: TokenPrefixPattern): TokenizerFactory {
@@ -30,17 +29,17 @@ export class PrefixTokenizerFactoryImpl implements TokenizerFactory {
     return this;
   }
   build(): Tokenizer {
-    return new PrefixTokenizerImpl(this.patterns);
+    return new PrefixTokenizer(this.patterns);
   }
 }
 
-class PrefixTokenizerImpl implements Tokenizer {
+class PrefixTokenizer implements Tokenizer {
   private readonly keys: TokenKey[];
   private readonly regex: RegExp;
 
   constructor(patterns: Map<TokenKey, Prefix>) {
     this.keys = Array.from(patterns.keys());
-    this.regex = PrefixTokenizerImpl.createRegex(patterns);
+    this.regex = PrefixTokenizer.createRegex(patterns);
   }
 
   tokenize(str: string): TokenizeResult {
@@ -57,7 +56,7 @@ class PrefixTokenizerImpl implements Tokenizer {
         group[key] != undefined && map.get(key)?.push(group[key]);
       });
     });
-    return new PrefixTokenizeResultImpl(map);
+    return new PrefixTokenizeResult(map);
   }
 
   /**
@@ -83,7 +82,7 @@ class PrefixTokenizerImpl implements Tokenizer {
   }
 }
 
-class PrefixTokenizeResultImpl implements TokenizeResult {
+class PrefixTokenizeResult implements TokenizeResult {
   private readonly resultMap: Map<TokenKey, Array<Token>>;
   constructor(map: Map<TokenKey, Array<Token>>) {
     this.resultMap = map;
