@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - # Docker hub 업로드
         name: Publish to docker hub
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-${{ github.sha }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-api-${{ github.sha }}
 
       - name: Deploy on Test-Server
         uses: appleboy/ssh-action@master
@@ -61,10 +61,10 @@ jobs:
             echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             
             echo "docker - pulling..."
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-${{ github.sha }}
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-api-${{ github.sha }}
 
             echo "docker - changing image name and tag ..."
-            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
+            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
             
             cd /home/project/techpick
             
