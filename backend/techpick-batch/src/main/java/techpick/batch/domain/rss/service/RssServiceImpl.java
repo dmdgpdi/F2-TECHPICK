@@ -36,6 +36,11 @@ public class RssServiceImpl implements RssService {
 	private final RssAdaptor rssAdaptor;
 	private final RssMapper rssMapper;
 
+	@Scheduled(cron = "0 * * * * *")
+	public void scheduledTask() {
+		log.info("scheduledTask Deploy Test");
+	}
+
 	@Override
 	@Transactional
 	public RssBlogResult saveRssBlog(RssBlogCommand.Create command) {
