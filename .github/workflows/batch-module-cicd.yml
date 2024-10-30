@@ -6,7 +6,6 @@ on:
       - "backend-v2" # 배포 대상 브랜치
     paths:
       - 'backend/techpick-core/**'
-      - 'backend/techpick-security/**'
       - 'backend/techpick-batch/**'
   workflow_dispatch:
 
