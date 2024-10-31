@@ -1,10 +1,15 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { hasIndex } from '@/utils';
-import type { Active, Over } from '@dnd-kit/core';
-import type { FolderType } from '@/types';
-
-export type SelectedFolderListType = number[];
+import { changeParentFolderId } from './utils/changeParentFolderId';
+import { isDnDCurrentData } from './utils/isDnDCurrentData';
+import { moveFolderToDifferentParent } from './utils/moveFolderToDifferentParent';
+import { reorderFolderInSameParent } from './utils/reorderFoldersInSameParent';
+import type { Active, Over, UniqueIdentifier } from '@dnd-kit/core';
+import type {
+  FolderType,
+  FolderMapType,
+  SelectedFolderListType,
+} from '@/types';
 
 type MoveFolderPayload = {
   from: Active;
@@ -13,7 +18,7 @@ type MoveFolderPayload = {
 };
 
 type TreeState = {
-  treeDataList: FolderType[];
+  treeDataMap: FolderMapType;
   selectedFolderList: SelectedFolderListType;
   from: Active | null;
   to: Over | null;
@@ -28,17 +33,18 @@ type TreeAction = {
   moveFolder: ({ from, to, selectedFolderList }: MoveFolderPayload) => void;
   focusFolder: () => void;
   movePick: () => void;
-  setTreeData: (newTreeDate: FolderType[]) => void;
+  setTreeMap: (newTreeDate: FolderMapType) => void;
   setSelectedFolderList: (
     newSelectedFolderData: SelectedFolderListType
   ) => void;
   setFrom: (newFrom: Active) => void;
   setTo: (newTo: Over) => void;
   setIsDragging: (isDragging: boolean) => void;
+  filterByParentId: (parentId: UniqueIdentifier) => FolderType[];
 };
 
 const initialState: TreeState = {
-  treeDataList: [],
+  treeDataMap: {},
   selectedFolderList: [],
   from: null,
   to: null,
@@ -46,59 +52,72 @@ const initialState: TreeState = {
 };
 
 export const useTreeStore = create<TreeState & TreeAction>()(
-  immer((set) => ({
+  immer((set, get) => ({
     ...initialState,
     createFolder: () => {},
     readFolder: () => {},
     updateFolder: () => {},
     deleteFolder: () => {},
     moveFolder: ({ from, to, selectedFolderList }) => {
-      set((state) => {
-        const curIndex = state.treeDataList.findIndex(
-          (item) => item.id === from.id
-        );
-        const targetIndex = state.treeDataList.findIndex(
-          (item) => item.id === to.id
-        );
-        // 이동할 폴더가 (즉 목적지 to)가 뒤에 있다면 위치를 조정해야한다.
-        const nextIndex =
-          curIndex < targetIndex
-            ? Math.min(targetIndex + 1, state.treeDataList.length)
-            : targetIndex;
+      const fromData = from.data.current;
+      const toData = to.data.current;
 
-        if (!hasIndex(curIndex) || !hasIndex(nextIndex)) return;
+      if (!isDnDCurrentData(fromData) || !isDnDCurrentData(toData)) return;
+      // SortableContext에 id가 없으면 종료
+      if (!fromData.sortable.containerId || !toData.sortable.containerId)
+        return;
 
-        // 이동할 폴더 리스트를 생성합니다.
-        const folderListToMove = state.treeDataList.filter((treeData) => {
-          return selectedFolderList.includes(treeData.id);
+      // 부모 containerId가 같으면
+      if (fromData.sortable.containerId === toData.sortable.containerId) {
+        const parentId = fromData.sortable.containerId;
+        const fromId = from.id;
+        const toId = to.id;
+
+        set((state) => {
+          const childFolderList = state.treeDataMap[parentId].childFolderList;
+          state.treeDataMap[parentId].childFolderList =
+            reorderFolderInSameParent({
+              childFolderList,
+              fromId,
+              toId,
+              selectedFolderList,
+            });
         });
 
-        // nextIndex 이전의 리스트, selected list, nextIndex after index
-        const beforeNextIndexList = state.treeDataList
-          .slice(0, nextIndex)
-          .filter((treeData) => {
-            return !selectedFolderList.includes(treeData.id);
-          });
-        const afterNextIndexList = state.treeDataList
-          .slice(nextIndex)
-          .filter((treeData) => {
-            return !selectedFolderList.includes(treeData.id);
-          });
+        return;
+      }
 
-        // 새 리스트를 만들어 상태를 업데이트합니다.
-        state.treeDataList = [
-          ...beforeNextIndexList,
-          ...folderListToMove,
-          ...afterNextIndexList,
-        ];
+      const sourceParentId = fromData.sortable.containerId;
+      const targetParentId = toData.sortable.containerId;
+      const targetId = to.id;
+
+      set((state) => {
+        const newTreeDataMap = moveFolderToDifferentParent({
+          treeDataMap: state.treeDataMap,
+          selectedFolderList: state.selectedFolderList,
+          sourceParentId,
+          targetParentId,
+          targetId,
+        });
+
+        if (!newTreeDataMap) {
+          return;
+        }
+
+        state.treeDataMap = newTreeDataMap;
+        state.treeDataMap = changeParentFolderId({
+          treeDataMap: state.treeDataMap,
+          childFolderList: state.selectedFolderList,
+          parentId: targetParentId,
+        });
       });
     },
 
     focusFolder: () => {},
     movePick: () => {},
-    setTreeData: (newTreeDate) => {
+    setTreeMap: (newTreeDate) => {
       set((state) => {
-        state.treeDataList = newTreeDate;
+        state.treeDataMap = newTreeDate;
       });
     },
     setSelectedFolderList: (newSelectedFolderData) => {
@@ -120,6 +139,28 @@ export const useTreeStore = create<TreeState & TreeAction>()(
       set((state) => {
         state.isDragging = isDragging; // 드래그 상태 설정
       });
+    },
+    filterByParentId: (parentId) => {
+      const parentFolder = get().treeDataMap[parentId.toString()];
+
+      if (!parentFolder) {
+        return [];
+      }
+
+      const childFolderIdList = parentFolder.childFolderList;
+      const filteredFolderList = [];
+
+      for (const childFolderId of childFolderIdList) {
+        const curFolderInfo = get().treeDataMap[childFolderId];
+
+        if (!curFolderInfo) {
+          continue;
+        }
+
+        filteredFolderList.push(curFolderInfo);
+      }
+
+      return filteredFolderList;
     },
   }))
 );
