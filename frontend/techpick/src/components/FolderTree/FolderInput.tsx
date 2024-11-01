@@ -1,33 +1,27 @@
 import { useCallback, useEffect, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
 import { FolderPlus } from 'lucide-react';
-import { useCreateFolderInputStore } from '@/stores/createFolderInputStore';
-import { useTreeStore } from '@/stores/dndTreeStore/dndTreeStore';
 import { isEmptyString } from '@/utils';
-import {
-  createFolderInputLayout,
-  inputStyle,
-  labelStyle,
-} from './createFolderInput.css';
+import { folderInputLayout, inputStyle, labelStyle } from './folderInput.css';
 
-export function CreateFolderInput({ parentFolderId }: CreateFolderInputProps) {
+export function FolderInput({
+  onSubmit,
+  onClickOutSide = () => {},
+  initialValue = '',
+}: FolderInputProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { createFolder: createFolderInStore } = useTreeStore();
-  const { closeCreateFolderInput } = useCreateFolderInputStore();
 
-  const createFolder = useCallback(() => {
+  const submitIfNotEmptyString = useCallback(() => {
     const folderName = inputRef.current?.value.trim() ?? '';
-
     if (isEmptyString(folderName)) return;
 
-    createFolderInStore({ parentFolderId, newFolderName: folderName });
-    closeCreateFolderInput();
-  }, [closeCreateFolderInput, createFolderInStore, parentFolderId]);
+    onSubmit(folderName);
+  }, [onSubmit]);
 
   const onEnter = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      createFolder();
+      submitIfNotEmptyString();
     }
   };
 
@@ -38,8 +32,8 @@ export function CreateFolderInput({ parentFolderId }: CreateFolderInputProps) {
           containerRef.current &&
           !containerRef.current.contains(event.target as Node)
         ) {
-          createFolder();
-          closeCreateFolderInput();
+          submitIfNotEmptyString();
+          onClickOutSide();
         }
       };
 
@@ -48,21 +42,26 @@ export function CreateFolderInput({ parentFolderId }: CreateFolderInputProps) {
         document.removeEventListener('mousedown', handleClickOutside);
       };
     },
-    [closeCreateFolderInput, createFolder]
+    [onClickOutSide, submitIfNotEmptyString]
   );
 
-  useEffect(function focusCreateFolderInput() {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
+  useEffect(
+    function initializeFolderInput() {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.value = initialValue;
+      }
+    },
+    [initialValue]
+  );
 
   return (
-    <div ref={containerRef} className={createFolderInputLayout}>
-      <label htmlFor="" className={labelStyle}>
+    <div ref={containerRef} className={folderInputLayout}>
+      <label htmlFor="folderInput" className={labelStyle}>
         <FolderPlus size={24} />
       </label>
       <input
+        id="folderInput"
         type="text"
         ref={inputRef}
         className={inputStyle}
@@ -72,6 +71,8 @@ export function CreateFolderInput({ parentFolderId }: CreateFolderInputProps) {
   );
 }
 
-interface CreateFolderInputProps {
-  parentFolderId: number;
+interface FolderInputProps {
+  onSubmit: (value: string) => void;
+  onClickOutSide?: () => void;
+  initialValue?: string;
 }
