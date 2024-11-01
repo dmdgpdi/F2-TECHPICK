@@ -1,14 +1,20 @@
 import { style } from '@vanilla-extract/css';
-import { colorThemeContract } from 'techpick-shared';
+import {
+  colorThemeContract,
+  sizes,
+  space,
+  borderRadius,
+} from 'techpick-shared';
 
-export const draggableItem = style({
-  minWidth: '200px',
-  minHeight: '30px',
-  padding: '8px 12px',
-  margin: '4px 0',
-  border: '1px solid #ccc',
-  borderRadius: '4px',
-  backgroundColor: '#fff',
+export const folderInfoItemStyle = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: space['8'],
+  minWidth: sizes['3xs'],
+  minHeight: '32px',
+  padding: space['8'],
+  borderRadius: borderRadius['base'],
+  backgroundColor: colorThemeContract.backgroundBase,
   cursor: 'grab',
   transition: 'background-color 0.2s',
   selectors: {
@@ -27,4 +33,8 @@ export const draggingItem = style({
 
 export const selectedDragItemStyle = style({
   backgroundColor: colorThemeContract.primary,
+});
+
+export const FolderIconStyle = style({
+  flexShrink: 0,
 });

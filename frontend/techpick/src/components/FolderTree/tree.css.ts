@@ -1,12 +1,10 @@
 import { style } from '@vanilla-extract/css';
-import { colorThemeContract } from 'techpick-shared';
+import { colorThemeContract, sizes, space } from 'techpick-shared';
 
 export const treeLayout = style({
-  width: '400px',
-  height: '800px',
-  backgroundColor: 'green',
-  padding: '10px',
-  paddingTop: '50px',
+  minWidth: sizes['3xs'],
+  height: '100vh',
+  padding: space['8'],
   margin: 'auto',
 });
 
