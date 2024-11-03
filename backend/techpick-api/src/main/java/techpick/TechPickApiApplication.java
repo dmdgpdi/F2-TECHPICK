@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 )
 public class TechPickApiApplication {
 	public static void main(String[] args) {
-		// 테스트를 위한 주석 추가!
+		// 테스트를 위한 주석 추가
 		SpringApplication.run(TechPickApiApplication.class, args);
 	}
 }
