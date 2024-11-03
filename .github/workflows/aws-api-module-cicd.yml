@@ -55,7 +55,7 @@ jobs:
           host: techpick.org
           port: 22
           username: ${{ secrets.AWS_USERNAME }}
-          key: ${{ secrets.AWS_ACCESS_KEY }}
+          key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           script: |
             echo "login docker hub for private repository access ..."
             echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
