@@ -52,9 +52,9 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: techpick.org
-          port: 4242
-          username: ${{ secrets.AWS_ACCESS_KEY }}
-          password: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+          port: 22
+          username: ${{ secrets.AWS_USERNAME }}
+          key: ${{ secrets.AWS_ACCESS_KEY }}
           script: |
             echo "login docker hub for private repository access ..."
             echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
