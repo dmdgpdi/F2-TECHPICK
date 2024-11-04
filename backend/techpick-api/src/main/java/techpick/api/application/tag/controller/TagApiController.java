@@ -7,17 +7,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import techpick.api.application.tag.dto.TagApiMapper;
 import techpick.api.application.tag.dto.TagApiRequest;
@@ -39,7 +39,7 @@ public class TagApiController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "조회 성공")
 	})
-	public ResponseEntity<List<TagApiResponse.Read>> getAllUserTag(@Parameter(hidden = true) @LoginUserId Long userId) {
+	public ResponseEntity<List<TagApiResponse.Read>> getAllUserTag(@LoginUserId Long userId) {
 		return ResponseEntity.ok(
 			tagService.getUserTagList(userId).stream()
 				.map(tagApiMapper::toReadResponse)
@@ -53,8 +53,8 @@ public class TagApiController {
 		@ApiResponse(responseCode = "200", description = "태그 추가 성공"),
 		@ApiResponse(responseCode = "400", description = "중복된 태그 이름", content = @Content(schema = @Schema()))
 	})
-	public ResponseEntity<TagApiResponse.Create> createTag(@Parameter(hidden = true) @LoginUserId Long userId,
-		TagApiRequest.Create request) {
+	public ResponseEntity<TagApiResponse.Create> createTag(@LoginUserId Long userId,
+		@Valid @RequestBody TagApiRequest.Create request) {
 		return ResponseEntity.ok(
 			tagApiMapper.toCreateResponse(tagService.saveTag(tagApiMapper.toCreateCommand(userId, request))));
 	}
@@ -66,8 +66,8 @@ public class TagApiController {
 		@ApiResponse(responseCode = "400", description = "중복된 태그 이름"),
 		@ApiResponse(responseCode = "401", description = "본인 태그만 수정할 수 있습니다.")
 	})
-	public ResponseEntity<Void> updateTag(@Parameter(hidden = true) @LoginUserId Long userId,
-		TagApiRequest.Update request) {
+	public ResponseEntity<Void> updateTag(@LoginUserId Long userId,
+		@Valid @RequestBody TagApiRequest.Update request) {
 		tagService.updateTag(tagApiMapper.toUpdateCommand(userId, request));
 		return ResponseEntity.noContent().build();
 	}
@@ -78,8 +78,8 @@ public class TagApiController {
 		@ApiResponse(responseCode = "204", description = "태그 이동 성공"),
 		@ApiResponse(responseCode = "401", description = "본인 태그만 이동할 수 있습니다.")
 	})
-	public ResponseEntity<Void> moveTag(@Parameter(hidden = true) @LoginUserId Long userId,
-		TagApiRequest.Move request) {
+	public ResponseEntity<Void> moveTag(@LoginUserId Long userId,
+		@Valid @RequestBody TagApiRequest.Move request) {
 		tagService.moveUserTag(tagApiMapper.toMoveCommand(userId, request));
 		return ResponseEntity.noContent().build();
 	}
@@ -90,8 +90,8 @@ public class TagApiController {
 		@ApiResponse(responseCode = "204", description = "태그 삭제 성공"),
 		@ApiResponse(responseCode = "401", description = "본인 태그만 삭제할 수 있습니다.")
 	})
-	public ResponseEntity<Void> deleteTag(@Parameter(hidden = true) @LoginUserId Long userId,
-		TagApiRequest.Delete request) {
+	public ResponseEntity<Void> deleteTag(@LoginUserId Long userId,
+		@Valid @RequestBody TagApiRequest.Delete request) {
 		tagService.deleteTag(tagApiMapper.toDeleteCommand(userId, request));
 		return ResponseEntity.noContent().build();
 	}
