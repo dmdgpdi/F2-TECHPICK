@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import techpick.api.domain.tag.dto.TagCommand;
 import techpick.api.domain.tag.dto.TagMapper;
 import techpick.api.domain.tag.dto.TagResult;
@@ -13,6 +14,7 @@ import techpick.api.domain.tag.exception.ApiTagException;
 import techpick.api.infrastructure.tag.TagDataHandler;
 import techpick.core.model.tag.Tag;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TagService {
@@ -35,12 +37,14 @@ public class TagService {
 
 	@Transactional
 	public TagResult saveTag(TagCommand.Create command) {
+		log.info("service.saveTag: userId={}", command.userId());
 		validateDuplicateTagName(command.userId(), command.name());
 		return tagMapper.toResult(tagDataHandler.saveTag(command.userId(), command));
 	}
 
 	@Transactional
 	public TagResult updateTag(TagCommand.Update command) {
+		log.info("service.updateTag: userId={}", command.userId());
 		Tag tag = tagDataHandler.getTag(command.tagId());
 
 		validateTagAccess(command.userId(), tag);

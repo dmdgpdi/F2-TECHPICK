@@ -19,12 +19,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import techpick.api.application.tag.dto.TagApiMapper;
 import techpick.api.application.tag.dto.TagApiRequest;
 import techpick.api.application.tag.dto.TagApiResponse;
 import techpick.api.domain.tag.service.TagService;
 import techpick.security.annotation.LoginUserId;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/tags")
@@ -55,6 +57,7 @@ public class TagApiController {
 	})
 	public ResponseEntity<TagApiResponse.Create> createTag(@Parameter(hidden = true) @LoginUserId Long userId,
 		TagApiRequest.Create request) {
+		log.info("controller.createTag: userId={}, request={}", userId, request);
 		return ResponseEntity.ok(
 			tagApiMapper.toCreateResponse(tagService.saveTag(tagApiMapper.toCreateCommand(userId, request))));
 	}

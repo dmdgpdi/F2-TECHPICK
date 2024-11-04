@@ -45,6 +45,7 @@ public class TagDataHandler {
 
 	@Transactional
 	public Tag saveTag(Long userId, TagCommand.Create command) {
+		log.info("TagDataHandler.userId: {}", command.userId());
 		User user = userRepository.findById(userId).orElseThrow(ApiUserException::USER_NOT_FOUND);
 		Tag tag = tagRepository.save(tagMapper.toEntity(command, user));
 		user.getTagOrderList().add(tag.getId());
