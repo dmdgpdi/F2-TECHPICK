@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - "backend-v2-deploy-test" # 배포 대상 브랜치
-    paths:
-      - 'backend/techpick-core/**'
-      - 'backend/techpick-security/**'
-      - 'backend/techpick-api/**'
   workflow_dispatch:
 
 jobs:
