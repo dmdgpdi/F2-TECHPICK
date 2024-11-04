@@ -54,7 +54,7 @@ spring:
     hibernate:
       ddl-auto: update
 core:
-  base-url: https://api.minlife.me
+  base-url: https://v2.minlife.me
 
 ---
 
