@@ -38,8 +38,8 @@ public class SecurityConfig {
 	@Value("${core.base-url}")
 	private String baseUrl;
 
-	@Value("${security.clientUrl}")
-	private String clientUrl;
+	@Value("${security.cors-pattern}")
+	private String corsPattern;
 
 	public static final String ACCESS_TOKEN_KEY = "access_token";
 	public static final String LOGIN_FLAG_FOR_FRONTEND = "techPickLogin";
@@ -93,11 +93,8 @@ public class SecurityConfig {
 		CorsConfiguration config = new CorsConfiguration();
 
 		config.setAllowCredentials(true);
-		config.setAllowedOrigins(List.of(
-			baseUrl,
-			clientUrl
-		));
-		config.addAllowedOriginPattern("chrome-extension://*");
+		config.setAllowedOrigins(List.of(baseUrl));
+		config.setAllowedOriginPatterns(List.of("chrome-extension://*", corsPattern));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setExposedHeaders(List.of("*"));
