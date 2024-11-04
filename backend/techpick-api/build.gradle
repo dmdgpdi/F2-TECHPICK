@@ -12,6 +12,10 @@ repositories {
 dependencies {
     implementation project(":techpick-core")
     implementation project(":techpick-security")
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
