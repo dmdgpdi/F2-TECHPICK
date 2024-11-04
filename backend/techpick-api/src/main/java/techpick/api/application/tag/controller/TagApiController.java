@@ -55,7 +55,7 @@ public class TagApiController {
 		@ApiResponse(responseCode = "200", description = "태그 추가 성공"),
 		@ApiResponse(responseCode = "400", description = "중복된 태그 이름", content = @Content(schema = @Schema()))
 	})
-	public ResponseEntity<TagApiResponse.Create> createTag(@LoginUserId Long userId,
+	public ResponseEntity<TagApiResponse.Create> createTag(@Parameter(hidden = true) @LoginUserId Long userId,
 		TagApiRequest.Create request) {
 		log.info("controller.createTag: userId={}, request={}", userId, request);
 		return ResponseEntity.ok(

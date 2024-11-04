@@ -11,10 +11,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import techpick.security.annotation.LoginUserId;
 import techpick.security.config.SecurityConfig;
 import techpick.security.exception.ApiOAuth2Exception;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
@@ -35,6 +37,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 		WebDataBinderFactory binderFactory
 	) {
 		var authentication = SecurityContextHolder.getContext().getAuthentication();
+		log.info("LoginUserArgumentResolver.resolveArgument: userId={}", authentication.getPrincipal());
+
 		if (authentication != null && authentication.getPrincipal() instanceof Long) {
 			return authentication.getPrincipal();
 		}
