@@ -94,7 +94,7 @@ public class SecurityConfig {
 
 		config.setAllowCredentials(true);
 		config.setAllowedOrigins(List.of(baseUrl));
-		config.setAllowedOriginPatterns(List.of("chrome-extension://*", corsPattern));
+		config.setAllowedOriginPatterns(List.of("chrome-extension://*", "https://local.minlife.me:3000", corsPattern));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setExposedHeaders(List.of("*"));
