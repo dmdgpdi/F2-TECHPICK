@@ -64,7 +64,7 @@ public class FolderDataHandler {
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 
 		Folder folder = folderRepository.save(Folder.createEmptyGeneralFolder(user, parentFolder, command.name()));
-		folder.getParentFolder().addChildFolderIdOrderedList(folder.getId());
+		folder.getParentFolder().addChildFolderIdOrdered(folder.getId());
 		return folder;
 	}
 
@@ -79,11 +79,12 @@ public class FolderDataHandler {
 
 	@Transactional
 	public List<Long> moveFolderWithinParent(FolderCommand.Move command) {
-		Folder parentFolder = folderRepository.findById(command.destinationFolderId())
+		Long destinationFolderId = command.destinationFolderId();
+		Folder destinationFolder = folderRepository.findById(destinationFolderId)
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 
-		parentFolder.updateChildFolderIdOrderedList(command.idList(), command.orderIdx());
-		return parentFolder.getChildFolderIdOrderedList();
+		destinationFolder.updateChildFolderIdOrderedList(command.idList(), command.orderIdx());
+		return destinationFolder.getChildFolderIdOrderedList();
 	}
 
 	@Transactional
@@ -96,9 +97,12 @@ public class FolderDataHandler {
 
 		Folder newParent = folderRepository.findById(command.destinationFolderId())
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
-		newParent.getChildFolderIdOrderedList().addAll(command.orderIdx(), command.idList());
+		newParent.addChildFolderIdOrderedList(command.idList(), command.orderIdx());
 
-		folder.updateParentFolder(newParent);
+		List<Folder> folderList = getFolderList(command.idList());
+		for (Folder moveFolder : folderList) {
+			moveFolder.updateParentFolder(newParent);
+		}
 
 		return newParent.getChildFolderIdOrderedList();
 	}
