@@ -44,7 +44,7 @@ import techpick.core.model.user.UserRepository;
 
 @Slf4j
 @SpringBootTest(classes = TechPickApiApplication.class)
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 class PickServiceTest {
 
 	@Autowired
