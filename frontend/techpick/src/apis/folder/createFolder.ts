@@ -1,11 +1,16 @@
 import { HTTPError } from 'ky';
 import { apiClient, returnErrorFromHTTPError } from '@/apis';
-import type { GetPickResponseType } from '../pickApi.type';
+import { API_URLS } from '../apiConstants';
+import type {
+  CreateFolderRequestType,
+  CreateFolderResponseType,
+} from '@/types';
 
-export const getPick = async (pickId: number): Promise<GetPickResponseType> => {
+export const createFolder = async (newFolderInfo: CreateFolderRequestType) => {
   try {
-    const response = await apiClient.get<GetPickResponseType>(
-      `picks/${pickId}`
+    const response = await apiClient.post<CreateFolderResponseType>(
+      API_URLS.CREATE_FOLDER,
+      { json: newFolderInfo }
     );
     const data = await response.json();
 

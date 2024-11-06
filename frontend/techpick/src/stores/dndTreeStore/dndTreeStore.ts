@@ -1,5 +1,13 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import {
+  getFolders,
+  getBasicFolders,
+  moveFolder,
+  updateFolder,
+  createFolder,
+} from '@/apis/folder';
+import { UNKNOWN_FOLDER_ID } from '@/constants';
 import { changeParentFolderId } from './utils/changeParentFolderId';
 import { isDnDCurrentData } from './utils/isDnDCurrentData';
 import { moveFolderToDifferentParent } from './utils/moveFolderToDifferentParent';
@@ -9,6 +17,8 @@ import type {
   FolderType,
   FolderMapType,
   SelectedFolderListType,
+  BasicFolderMap,
+  ChildFolderListType,
 } from '@/types';
 
 type TreeState = {
@@ -18,14 +28,23 @@ type TreeState = {
   from: Active | null;
   to: Over | null;
   isDragging: boolean;
+  basicFolderMap: BasicFolderMap | null;
+  rootFolderId: number;
 };
 
 type TreeAction = {
-  createFolder: (payload: CreateFolderPayload) => void;
+  createFolder: (payload: CreateFolderPayload) => Promise<void>;
   readFolder: () => void;
-  updateFolderName: (payload: UpdateFolderPayload) => void;
+  updateFolderName: (payload: UpdateFolderPayload) => Promise<void>;
   deleteFolder: (deleteFolderId: number) => void;
-  moveFolder: ({ from, to, selectedFolderList }: MoveFolderPayload) => void;
+  getFolders: () => Promise<void>;
+  getBasicFolders: () => Promise<void>;
+  moveFolder: ({
+    from,
+    to,
+    selectedFolderList,
+  }: MoveFolderPayload) => Promise<void>;
+  moveFolderToRecycleBin: (payload: MoveFolderToRecycleBin) => Promise<void>;
   movePick: () => void;
   setTreeMap: (newTreeDate: FolderMapType) => void;
   setSelectedFolderList: (
@@ -45,47 +64,110 @@ const initialState: TreeState = {
   from: null,
   to: null,
   isDragging: false,
+  basicFolderMap: null,
+  rootFolderId: UNKNOWN_FOLDER_ID,
 };
 
 export const useTreeStore = create<TreeState & TreeAction>()(
   immer((set, get) => ({
     ...initialState,
-    createFolder: ({ parentFolderId, newFolderName, order = 0 }) => {
-      // get id from server.
-      const newFolderId = new Date().getUTCMilliseconds();
+    createFolder: async ({ parentFolderId, newFolderName, order = 0 }) => {
+      const temporalNewFolderId = -new Date().getUTCMilliseconds();
+      let prevChildIdOrderedList: ChildFolderListType = [];
 
       set((state) => {
-        // 자식 생성
-        state.treeDataMap[newFolderId] = {
-          id: newFolderId,
+        state.treeDataMap[temporalNewFolderId] = {
+          id: temporalNewFolderId,
           name: newFolderName,
           parentFolderId: parentFolderId,
-          childFolderList: [],
+          childFolderIdOrderedList: [],
+          folderType: 'GENERAL',
         };
 
-        // 부모에게 자식 연결
         const curChildFolderList =
-          state.treeDataMap[parentFolderId].childFolderList;
-        curChildFolderList.splice(order, 0, newFolderId);
-        state.treeDataMap[parentFolderId].childFolderList = curChildFolderList;
+          state.treeDataMap[parentFolderId].childFolderIdOrderedList;
+        prevChildIdOrderedList = [...curChildFolderList];
+        curChildFolderList.splice(order, 0, temporalNewFolderId);
+        state.treeDataMap[parentFolderId].childFolderIdOrderedList =
+          curChildFolderList;
       });
+
+      try {
+        const newFolder = await createFolder({
+          name: newFolderName,
+          parentFolderId,
+        });
+
+        set((state) => {
+          state.treeDataMap[`${newFolder.id}`] = newFolder;
+          const childFolderIdOrderedList =
+            state.treeDataMap[parentFolderId].childFolderIdOrderedList;
+          state.treeDataMap[parentFolderId].childFolderIdOrderedList =
+            childFolderIdOrderedList.map((childId) => {
+              if (childId === temporalNewFolderId) {
+                return newFolder.id;
+              }
+
+              return childId;
+            });
+        });
+      } catch {
+        set((state) => {
+          state.treeDataMap[parentFolderId].childFolderIdOrderedList =
+            prevChildIdOrderedList;
+        });
+      }
     },
     readFolder: () => {},
-    updateFolderName: ({ folderId, newFolderName }) => {
+    updateFolderName: async ({ folderId, newFolderName }) => {
+      let previousFolderName = '';
+
       set((state) => {
+        previousFolderName = state.treeDataMap[folderId].name;
         state.treeDataMap[folderId].name = newFolderName;
       });
+
+      try {
+        await updateFolder({ id: folderId, name: newFolderName });
+      } catch {
+        set((state) => {
+          state.treeDataMap[folderId].name = previousFolderName;
+        });
+      }
     },
     deleteFolder: (deleteFolderId) => {
       set((state) => {
         const parentFolderId = state.treeDataMap[deleteFolderId].parentFolderId;
         const childFolderList =
-          state.treeDataMap[parentFolderId].childFolderList;
-        state.treeDataMap[parentFolderId].childFolderList =
+          state.treeDataMap[parentFolderId].childFolderIdOrderedList;
+        state.treeDataMap[parentFolderId].childFolderIdOrderedList =
           childFolderList.filter((childId) => childId !== deleteFolderId);
       });
     },
-    moveFolder: ({ from, to, selectedFolderList }) => {
+    getFolders: async () => {
+      try {
+        const folderMap = await getFolders();
+
+        set((state) => {
+          state.treeDataMap = folderMap;
+        });
+      } catch (error) {
+        console.log('getFolderMap error', error);
+      }
+    },
+    getBasicFolders: async () => {
+      try {
+        const basicFolderMap = await getBasicFolders();
+
+        set((state) => {
+          state.basicFolderMap = basicFolderMap;
+          state.rootFolderId = basicFolderMap['ROOT'].id;
+        });
+      } catch (error) {
+        console.log('getBasicFolderMap error', error);
+      }
+    },
+    moveFolder: async ({ from, to, selectedFolderList }) => {
       const fromData = from.data.current;
       const toData = to.data.current;
 
@@ -99,10 +181,14 @@ export const useTreeStore = create<TreeState & TreeAction>()(
         const parentId = fromData.sortable.containerId;
         const fromId = from.id;
         const toId = to.id;
+        let prevChildFolderList: ChildFolderListType = [];
 
         set((state) => {
-          const childFolderList = state.treeDataMap[parentId].childFolderList;
-          state.treeDataMap[parentId].childFolderList =
+          const childFolderList =
+            state.treeDataMap[parentId].childFolderIdOrderedList;
+          prevChildFolderList = [...childFolderList];
+
+          state.treeDataMap[parentId].childFolderIdOrderedList =
             reorderFolderInSameParent({
               childFolderList,
               fromId,
@@ -110,6 +196,19 @@ export const useTreeStore = create<TreeState & TreeAction>()(
               selectedFolderList,
             });
         });
+
+        try {
+          await moveFolder({
+            idList: selectedFolderList,
+            orderIdx: toData.sortable.index,
+            destinationFolderId: Number(toData.sortable.containerId),
+          });
+        } catch {
+          set((state) => {
+            state.treeDataMap[parentId].childFolderIdOrderedList =
+              prevChildFolderList;
+          });
+        }
 
         return;
       }
@@ -138,6 +237,41 @@ export const useTreeStore = create<TreeState & TreeAction>()(
           parentId: targetParentId,
         });
       });
+    },
+    moveFolderToRecycleBin: async ({ deleteFolderId }) => {
+      let parentFolderId = UNKNOWN_FOLDER_ID;
+      let prevChildFolderList: ChildFolderListType = [];
+      const FIRST = 0;
+      let recycleBinFolderId = UNKNOWN_FOLDER_ID;
+
+      set((state) => {
+        parentFolderId = state.treeDataMap[deleteFolderId].parentFolderId;
+        const childFolderList =
+          state.treeDataMap[parentFolderId].childFolderIdOrderedList;
+        state.treeDataMap[parentFolderId].childFolderIdOrderedList =
+          childFolderList.filter((childId) => childId !== deleteFolderId);
+
+        prevChildFolderList = [...childFolderList];
+      });
+
+      set((state) => {
+        if (state.basicFolderMap) {
+          recycleBinFolderId = state.basicFolderMap['RECYCLE_BIN'].id;
+        }
+      });
+
+      try {
+        await moveFolder({
+          idList: [deleteFolderId],
+          orderIdx: FIRST,
+          destinationFolderId: recycleBinFolderId,
+        });
+      } catch {
+        set((state) => {
+          state.treeDataMap[parentFolderId].childFolderIdOrderedList =
+            prevChildFolderList;
+        });
+      }
     },
     setFocusFolderId: (newFolderId) => {
       set((state) => {
@@ -177,7 +311,7 @@ export const useTreeStore = create<TreeState & TreeAction>()(
         return [];
       }
 
-      const childFolderIdList = parentFolder.childFolderList;
+      const childFolderIdList = parentFolder.childFolderIdOrderedList;
       const filteredFolderList = [];
 
       for (const childFolderId of childFolderIdList) {
@@ -210,4 +344,8 @@ type CreateFolderPayload = {
 type UpdateFolderPayload = {
   folderId: number;
   newFolderName: string;
+};
+
+type MoveFolderToRecycleBin = {
+  deleteFolderId: number;
 };
