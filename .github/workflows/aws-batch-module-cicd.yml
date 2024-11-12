@@ -63,18 +63,18 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }}
             
             echo "Tagging Docker image..."
-            docker tag minkyeki/techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
+            docker tag minkyeki/techpick:${{ env.api-version }}-batch-${{ github.sha }} techpick:${{ env.api-version }}-batch-staging
             
             echo "Saving Docker image as a tar file..."
-            docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }}
+            docker save -o /home/ubuntu/techpick-${{ env.api-version }}-batch.tar techpick:${{ env.api-version }}-batch-staging
             
             echo "Copying Docker image to target server..."
-            scp -i /home/ubuntu/Techpick-Private.pem -T /home/ubuntu/techpick-${{ env.api-version }}-api.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
+            scp -i /home/ubuntu/Techpick-Private.pem -T /home/ubuntu/techpick-${{ env.api-version }}-batch.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
             
             # SSH into target server to load and run the Docker image
             ssh -i /home/ubuntu/Techpick-Private.pem ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }} <<'EOF'
               echo "Loading Docker image on target server..."
-              docker load -i /home/ubuntu/techpick-${{ env.api-version }}-api.tar
+              docker load -i /home/ubuntu/techpick-${{ env.api-version }}-batch.tar
             
               echo "Setting up environment variables..."
               cd /home/ubuntu
@@ -97,7 +97,7 @@ jobs:
               echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
               echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env 
             
-              echo "Restarting techpick-api service..."
+              echo "Restarting techpick-batch service..."
               docker-compose stop techpick-batch
               docker-compose rm -f techpick-batch
               docker-compose up -d techpick-batch

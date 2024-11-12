@@ -67,7 +67,7 @@ jobs:
             docker tag minkyeki/techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
             
             echo "Saving Docker image as a tar file..."
-            docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-api-${{ github.sha }}
+            docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar techpick:${{ env.api-version }}-api-staging
             
             echo "Copying Docker image to target server..."
             scp -i /home/ubuntu/Techpick-Private.pem -T /home/ubuntu/techpick-${{ env.api-version }}-api.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
