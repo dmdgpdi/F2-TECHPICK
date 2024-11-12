@@ -30,8 +30,8 @@ public class PickService {
 
 	private final TagDataHandler tagDataHandler;
 	private final PickDataHandler pickDataHandler;
-	private final FolderDataHandler folderDataHandler;
 	private final PickMapper pickMapper;
+	private final FolderDataHandler folderDataHandler;
 
 	@Transactional(readOnly = true)
 	public PickResult.Pick getPick(PickCommand.Read command) {
