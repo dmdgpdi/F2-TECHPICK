@@ -7,13 +7,16 @@ import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import techpick.security.config.SecurityConfig;
-import techpick.security.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
+import techpick.security.config.SecurityProperties;
+import techpick.security.util.CookieUtil;
 
 @Component
 @RequiredArgsConstructor
 public class TechPickLogoutHandler implements LogoutHandler, LogoutSuccessHandler {
+
+	private final CookieUtil cookieUtil;
+	private final SecurityProperties properties;
 
 	@Override
 	public void logout(
@@ -21,9 +24,9 @@ public class TechPickLogoutHandler implements LogoutHandler, LogoutSuccessHandle
 		HttpServletResponse response,
 		Authentication authentication
 	) {
-		CookieUtil.deleteCookie(request, response, SecurityConfig.ACCESS_TOKEN_KEY);
-		CookieUtil.deleteCookie(request, response, SecurityConfig.LOGIN_FLAG_FOR_FRONTEND);
-		CookieUtil.deleteCookie(request, response, "JSESSIONID");
+		cookieUtil.deleteCookie(request, response, properties.ACCESS_TOKEN_KEY);
+		cookieUtil.deleteCookie(request, response, properties.LOGIN_FLAG_FOR_FRONTEND);
+		cookieUtil.deleteCookie(request, response, "JSESSIONID");
 	}
 
 	@Override

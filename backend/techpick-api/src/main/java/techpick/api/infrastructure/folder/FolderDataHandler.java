@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import techpick.api.domain.folder.dto.FolderCommand;
-import techpick.api.domain.folder.dto.FolderMapper;
 import techpick.api.domain.folder.exception.ApiFolderException;
 import techpick.api.domain.user.exception.ApiUserException;
 import techpick.core.model.folder.Folder;
@@ -23,7 +22,6 @@ public class FolderDataHandler {
 
 	private final FolderRepository folderRepository;
 	private final UserRepository userRepository;
-	private final FolderMapper folderMapper;
 
 	@Transactional(readOnly = true)
 	public Folder getFolder(Long folderId) {
@@ -59,19 +57,20 @@ public class FolderDataHandler {
 		return folderRepository.findUnclassifiedByUserId(userId);
 	}
 
-	// TODO: Folder Entity 생성 메서드 활용하도록 변경
 	@Transactional
 	public Folder saveFolder(FolderCommand.Create command) {
 		User user = userRepository.findById(command.userId()).orElseThrow(ApiUserException::USER_NOT_FOUND);
 		Folder parentFolder = folderRepository.findById(command.parentFolderId())
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 
-		return folderRepository.save(folderMapper.toEntity(command, user, parentFolder));
+		Folder folder = folderRepository.save(Folder.createEmptyGeneralFolder(user, parentFolder, command.name()));
+		folder.getParentFolder().addChildFolderIdOrdered(folder.getId());
+		return folder;
 	}
 
 	@Transactional
 	public Folder updateFolder(FolderCommand.Update command) {
-		Folder folder = folderRepository.findById(command.folderId())
+		Folder folder = folderRepository.findById(command.id())
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 		folder.updateFolderName(command.name());
 
@@ -80,30 +79,32 @@ public class FolderDataHandler {
 
 	@Transactional
 	public List<Long> moveFolderWithinParent(FolderCommand.Move command) {
-		Folder parentFolder = folderRepository.findById(command.destinationFolderId())
+		Long destinationFolderId = command.destinationFolderId();
+		Folder destinationFolder = folderRepository.findById(destinationFolderId)
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 
-		parentFolder.getChildFolderOrderList().removeAll(command.folderIdList());
-		parentFolder.getChildFolderOrderList().addAll(command.orderIdx(), command.folderIdList());
-
-		return parentFolder.getChildFolderOrderList();
+		destinationFolder.updateChildFolderIdOrderedList(command.idList(), command.orderIdx());
+		return destinationFolder.getChildFolderIdOrderedList();
 	}
 
 	@Transactional
 	public List<Long> moveFolderToDifferentParent(FolderCommand.Move command) {
-		Folder folder = folderRepository.findById(command.folderIdList().get(0))
+		Folder folder = folderRepository.findById(command.idList().get(0))
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 
 		Folder oldParent = folder.getParentFolder();
-		oldParent.getChildFolderOrderList().removeAll(command.folderIdList());
+		oldParent.getChildFolderIdOrderedList().removeAll(command.idList());
 
 		Folder newParent = folderRepository.findById(command.destinationFolderId())
 			.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
-		newParent.getChildFolderOrderList().addAll(command.orderIdx(), command.folderIdList());
+		newParent.addChildFolderIdOrderedList(command.idList(), command.orderIdx());
 
-		folder.updateParentFolder(newParent);
+		List<Folder> folderList = getFolderList(command.idList());
+		for (Folder moveFolder : folderList) {
+			moveFolder.updateParentFolder(newParent);
+		}
 
-		return newParent.getChildFolderOrderList();
+		return newParent.getChildFolderIdOrderedList();
 	}
 
 	@Transactional
@@ -111,12 +112,12 @@ public class FolderDataHandler {
 
 		List<Folder> deleteList = new ArrayList<>();
 
-		for (Long id : command.folderIdList()) {
+		for (Long id : command.idList()) {
 			Folder folder = folderRepository.findById(id)
 				.orElseThrow(ApiFolderException::FOLDER_NOT_FOUND);
 
 			Folder parentFolder = folder.getParentFolder();
-			parentFolder.getChildFolderOrderList().remove(folder.getId());
+			parentFolder.getChildFolderIdOrderedList().remove(folder.getId());
 
 			deleteList.add(folder);
 		}

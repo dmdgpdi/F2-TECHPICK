@@ -1,5 +1,6 @@
 package techpick.api.infrastructure.tag;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -36,9 +37,15 @@ public class TagDataHandler {
 
 	@Transactional(readOnly = true)
 	public List<Tag> getTagList(Long userId) {
-		return tagRepository.findAllByUserId(userId);
+		User user = userRepository.findById(userId).orElseThrow(ApiUserException::USER_NOT_FOUND);
+		List<Long> tagOrderList = user.getTagOrderList();
+		List<Tag> tagList = tagRepository.findAllByUserId(userId);
+		tagList.sort(Comparator.comparing(tag -> tagOrderList.indexOf(tag.getId())));
+
+		return tagList;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Tag> getTagList(List<Long> tagOrderList) {
 		return tagRepository.findAllById(tagOrderList);
 	}
@@ -53,7 +60,8 @@ public class TagDataHandler {
 
 	@Transactional
 	public Tag updateTag(TagCommand.Update command) {
-		Tag tag = tagRepository.findById(command.tagId()).orElseThrow(ApiTagException::TAG_NOT_FOUND);
+		log.info("TagDataHandler: tag id={}", command.id()); // for debug
+		Tag tag = tagRepository.findById(command.id()).orElseThrow(ApiTagException::TAG_NOT_FOUND);
 		tag.updateTagName(command.name());
 		tag.updateColorNumber(command.colorNumber());
 		return tag;
@@ -63,21 +71,21 @@ public class TagDataHandler {
 	public List<Long> moveTag(Long userId, TagCommand.Move command) {
 		User user = userRepository.findById(userId).orElseThrow(ApiUserException::USER_NOT_FOUND);
 		var userTagOrder = user.getTagOrderList();
-		userTagOrder.remove(command.tagId());
-		userTagOrder.add(command.orderIdx(), command.tagId());
+		userTagOrder.remove(command.id());
+		userTagOrder.add(command.orderIdx(), command.id());
 		return userTagOrder;
 	}
 
 	@Transactional
 	public void deleteTag(Long userId, TagCommand.Delete command) {
 		User user = userRepository.findById(userId).orElseThrow(ApiUserException::USER_NOT_FOUND);
-		Long tagId = command.tagId();
+		Long tagId = command.id();
 		user.getTagOrderList().remove(tagId);
 		pickTagRepository.findAllByTagId(tagId).stream()
 			.map(pickTag -> pickRepository.findById(pickTag.getPick().getId())
 				.orElseThrow(ApiTagException::TAG_NOT_FOUND))
 			.forEach(pick -> {
-				pick.getTagOrderList().remove(tagId);
+				pick.getTagIdOrderedList().remove(tagId);
 			});
 		pickTagRepository.deleteById(tagId);
 		tagRepository.deleteById(tagId);
