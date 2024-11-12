@@ -51,7 +51,7 @@ jobs:
       - name: Deploy on Test-Server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AWS_PUBLIC_IP }}
+          host: ${{ secrets.AWS_BASTION_IP }}
           port: 22
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_ACCESS_KEY }}
@@ -65,40 +65,40 @@ jobs:
             echo "docker - changing image name and tag ..."
             docker tag ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }} techpick:${{ env.api-version }}-batch-staging
             
-            cd /home/ubuntu/project/server/
+            # Run enter.sh to access the target server
+            chmod +x ./enter.sh
+            ./enter.sh techpick-api <<'EOF'
+              echo "Setting up environment variables..."
             
-            echo "create .env file with github repository's ENV setting ..."
+              cd /home/ubuntu
+              rm -rf .env
+              touch .env
+              echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
             
-            cd /home/ubuntu/project/database
-            rm -rf .env
-            touch .env
-            echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
-            echo "DOCKER_MYSQL_PASSWORD=${{ secrets.DOCKER_MYSQL_PASSWORD }}" >> .env
+              cd /home/ubuntu/project/server/${{ env.api-version }}
+              rm -rf .env
+              touch .env
+              echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
+              echo "DOCKER_MYSQL_DATABASE=${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}" >> .env
+              echo "DOCKER_MYSQL_URL=jdbc:mysql://techpick-mysql:3306/${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}?createDatabaseIfNotExist=true" >> .env
+              echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+              echo "JWT_ISSUER=${{ secrets.JWT_ISSUER }}" >> .env
+              echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+              echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+              echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+              echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
+              echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
+              echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env
+              echo "TECHPICK_BASE_URL=https://${{ env.api-version }}.${{ secrets.TECHPICK_DOMAIN }}" >> .env
             
-            cd /home/ubuntu/project/server/${{ env.api-version }}
-            rm -rf .env
-            touch .env
+              echo "Restarting techpick-api service..."
+              docker-compose stop techpick-batch
+              docker-compose rm -f techpick-batch
+              docker-compose up -d techpick-batch
             
-            echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
-            echo "DOCKER_MYSQL_PASSWORD=${{ secrets.DOCKER_MYSQL_PASSWORD }}" >> .env
-            echo "DOCKER_MYSQL_DATABASE=${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}" >> .env
-            echo "DOCKER_MYSQL_URL=jdbc:mysql://techpick-mysql:3306/${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}?createDatabaseIfNotExist=true" >> .env
-            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-            echo "JWT_ISSUER=${{ secrets.JWT_ISSUER }}" >> .env
-            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-            echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
-            echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
-            echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
-            echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env
-            echo "TECHPICK_BASE_URL=https://${{ env.api-version }}.${{ secrets.TECHPICK_DOMAIN }}" >> .env
-            
-            docker-compose stop techpick-batch
-            docker-compose rm -f techpick-batch
-            docker-compose up -d techpick-batch
-            
-            echo "docker - pruning images that passed 24h ..."
-            docker image prune -af --filter "until=24h"
+              echo "Pruning images older than 24 hours..."
+              docker image prune -af --filter "until=24h"
+            EOF
 
       - name: Discord Webhook Notification
         uses: sarisia/actions-status-discord@v1.14.7
