@@ -103,15 +103,17 @@ jobs:
               docker-compose rm -f techpick-batch
               docker-compose up -d techpick-batch
             
-              echo "Pruning images older than 24 hours..."
-              docker image prune -af --filter "until=24h"
+              echo "Cleanup: Removing image and tar file on target server..."
+              rm /home/ubuntu/techpick-v2-batch.tar
+              docker image prune -af
             
               echo "Removing tar file on target server..."
               rm /home/ubuntu/techpick-v2-batch.tar
             EOF
             
-            echo "Cleanup: Removing tar file on bastion..."
+            echo "Cleanup: Removing image and tar file on bastion..."
             rm /home/ubuntu/techpick-v2-batch.tar
+            docker image prune -af
 
       - name: Discord Webhook Notification
         uses: sarisia/actions-status-discord@v1.14.7
