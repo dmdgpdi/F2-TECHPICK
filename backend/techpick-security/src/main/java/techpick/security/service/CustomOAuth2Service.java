@@ -31,6 +31,7 @@ public class CustomOAuth2Service extends DefaultOAuth2UserService {
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+		log.error("갸아아아악!");
 		String provider = userRequest.getClientRegistration().getRegistrationId();
 		var oAuth2User = super.loadUser(userRequest);
 		Map<String, Object> attributes = getAttributes(oAuth2User, provider);
