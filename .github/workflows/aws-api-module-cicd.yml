@@ -67,7 +67,7 @@ jobs:
             docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-api-${{ github.sha }}
             
             echo "Copying Docker image to target server..."
-            scp -i /home/ubuntu/Techpick-Private.pem /home/ubuntu/techpick-${{ env.api-version }}-api.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
+            scp -i /home/ubuntu/Techpick-Private.pem -T /home/ubuntu/techpick-${{ env.api-version }}-api.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
             
             # SSH into target server to load and run the Docker image
             ssh -i /home/ubuntu/Techpick-Private.pem ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }} <<'EOF'
