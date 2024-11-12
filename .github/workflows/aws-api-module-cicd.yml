@@ -78,12 +78,12 @@ jobs:
               docker load -i /home/ubuntu/techpick-${{ env.api-version }}-api.tar
             
               echo "Setting up environment variables..."
-              cd /home/ubuntu/project/server
+              cd /home/ubuntu
               rm -rf .env
               touch .env
               echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
             
-              cd /home/ubuntu/project/server/${{ env.api-version }}
+              cd /home/ubuntu
               rm -rf .env
               touch .env
               echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
