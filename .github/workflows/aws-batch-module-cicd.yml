@@ -62,6 +62,9 @@ jobs:
             echo "Pulling Docker image on bastion..."
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }}
             
+            echo "Tagging Docker image..."
+            docker tag techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
+            
             echo "Saving Docker image as a tar file..."
             docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }}
             
@@ -72,9 +75,6 @@ jobs:
             ssh -i /home/ubuntu/Techpick-Private.pem ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }} <<'EOF'
               echo "Loading Docker image on target server..."
               docker load -i /home/ubuntu/techpick-${{ env.api-version }}-api.tar
-            
-              echo "Tagging Docker image..."
-              docker tag techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
             
               echo "Setting up environment variables..."
               cd /home/ubuntu/project/server
