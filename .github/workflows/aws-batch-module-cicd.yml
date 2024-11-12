@@ -56,21 +56,28 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_ACCESS_KEY }}
           script: |
-            echo "login docker hub for private repository access ..."
+            echo "Login to Docker Hub for private repository access on bastion..."
             echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             
-            echo "docker - pulling..."
+            echo "Pulling Docker image on bastion..."
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }}
-
-            echo "docker - changing image name and tag ..."
-            docker tag ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }} techpick:${{ env.api-version }}-batch-staging
             
-            # Run enter.sh to access the target server
-            chmod +x ./enter.sh
-            ./enter.sh techpick-api <<'EOF'
+            echo "Saving Docker image as a tar file..."
+            docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar ${{ secrets.DOCKERHUB_USERNAME }}/techpick:${{ env.api-version }}-batch-${{ github.sha }}
+            
+            echo "Copying Docker image to target server..."
+            scp -i /home/ubuntu/Techpick-Private.pem /home/ubuntu/techpick-${{ env.api-version }}-api.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
+            
+            # SSH into target server to load and run the Docker image
+            ssh -i /home/ubuntu/Techpick-Private.pem ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }} <<'EOF'
+              echo "Loading Docker image on target server..."
+              docker load -i /home/ubuntu/techpick-${{ env.api-version }}-api.tar
+            
+              echo "Tagging Docker image..."
+              docker tag techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
+            
               echo "Setting up environment variables..."
-            
-              cd /home/ubuntu
+              cd /home/ubuntu/project/server
               rm -rf .env
               touch .env
               echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
