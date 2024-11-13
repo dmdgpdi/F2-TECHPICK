@@ -24,12 +24,10 @@ export default function SearchPickResultPage() {
    * usePickStore의 구조를 그대로 활용하기 위해
    * folderId 기반 record를 탐색하는 식으로 구현함.
    */
-  const getSearchedPickList = () => {
-    const result = getRecentlyFetchedFolderIdList().flatMap((folderId) =>
+  const getSearchedPickList = () =>
+    getRecentlyFetchedFolderIdList().flatMap((folderId) =>
       getOrderedPickListByFolderId(folderId)
     );
-    return result;
-  };
 
   return <PickListViewer pickList={getSearchedPickList()} />;
 }
