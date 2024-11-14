@@ -1,16 +1,18 @@
 import type { PropsWithChildren } from 'react';
-import { FolderTree } from '@/components';
+import { FolderTree, FolderAndPickDndContextProvider } from '@/components';
 import { SearchWidget } from '@/components/SearchWidget/SearchWidget';
-import { ListViewerLayout, pageContainerLayout } from './layout.css';
+import { pageContainerLayout, ListViewerLayout } from './layout.css';
 
 export default function FolderLayout({ children }: PropsWithChildren) {
   return (
     <div className={pageContainerLayout}>
-      <FolderTree />
-      <div className={ListViewerLayout}>
-        <SearchWidget />
-        {children}
-      </div>
+      <FolderAndPickDndContextProvider>
+        <FolderTree />
+        <div className={ListViewerLayout}>
+          <SearchWidget />
+          {children}
+        </div>
+      </FolderAndPickDndContextProvider>
     </div>
   );
 }

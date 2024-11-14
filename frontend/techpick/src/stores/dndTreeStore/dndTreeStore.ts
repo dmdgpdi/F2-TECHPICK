@@ -10,7 +10,7 @@ import {
 } from '@/apis/folder';
 import getObjectEntries from '@/components/SearchWidget/util/getObjectEntries';
 import { UNKNOWN_FOLDER_ID } from '@/constants';
-import { isDnDCurrentData, reorderSortableIdList } from '@/utils';
+import { isFolderDraggableObject, reorderSortableIdList } from '@/utils';
 import { changeParentFolderId } from './utils/changeParentFolderId';
 import { moveFolderToDifferentParent } from './utils/moveFolderToDifferentParent';
 import type { Active, Over, UniqueIdentifier } from '@dnd-kit/core';
@@ -26,9 +26,11 @@ type TreeState = {
   treeDataMap: FolderMapType;
   selectedFolderList: SelectedFolderListType;
   focusFolderId: number | null;
+  hoverFolderId: number | null | undefined;
   from: Active | null;
   to: Over | null;
   isDragging: boolean;
+  draggingFolderInfo: FolderType | null | undefined;
   basicFolderMap: BasicFolderMap | null;
   rootFolderId: number;
 };
@@ -38,6 +40,7 @@ type TreeAction = {
   readFolder: () => void;
   updateFolderName: (payload: UpdateFolderPayload) => Promise<void>;
   deleteFolder: (deleteFolderId: number) => void;
+  getFolderInfoByFolderId: (folderId: number) => FolderType | null;
   getFolders: () => Promise<void>;
   getBasicFolders: () => Promise<void>;
   moveFolder: ({
@@ -56,7 +59,13 @@ type TreeAction = {
   setTo: (newTo: Over) => void;
   setIsDragging: (isDragging: boolean) => void;
   setFocusFolderId: (newFolderId: number) => void;
-  filterByParentId: (parentId: UniqueIdentifier) => FolderType[];
+  setHoverFolderId: (hoverFolderId: number | null | undefined) => void;
+  setDraggingFolderInfo: (
+    draggingFolderInfo: FolderType | null | undefined
+  ) => void;
+  getChildFolderListByParentFolderId: (
+    parentId: UniqueIdentifier
+  ) => FolderType[];
   /**
    * @author 김민규
    * @description 미리 로딩한 나의 폴더 리스트 에서 찾는다.
@@ -74,11 +83,13 @@ const initialState: TreeState = {
   treeDataMap: {},
   selectedFolderList: [],
   focusFolderId: null,
+  rootFolderId: UNKNOWN_FOLDER_ID,
+  hoverFolderId: null,
   from: null,
   to: null,
   isDragging: false,
   basicFolderMap: null,
-  rootFolderId: UNKNOWN_FOLDER_ID,
+  draggingFolderInfo: null,
 };
 
 export const useTreeStore = create<TreeState & TreeAction>()(
@@ -159,6 +170,21 @@ export const useTreeStore = create<TreeState & TreeAction>()(
             childFolderList.filter((childId) => childId !== deleteFolderId);
         });
       },
+      getFolderInfoByFolderId: (folderId) => {
+        const treeDataMap = get().treeDataMap;
+
+        if (!treeDataMap) {
+          return null;
+        }
+
+        const folderInfo = treeDataMap[folderId];
+
+        if (!folderInfo) {
+          return null;
+        }
+
+        return folderInfo;
+      },
       getFolders: async () => {
         try {
           const folderMap = await getFolders();
@@ -186,7 +212,11 @@ export const useTreeStore = create<TreeState & TreeAction>()(
         const fromData = from.data.current;
         const toData = to.data.current;
 
-        if (!isDnDCurrentData(fromData) || !isDnDCurrentData(toData)) return;
+        if (
+          !isFolderDraggableObject(fromData) ||
+          !isFolderDraggableObject(toData)
+        )
+          return;
         // SortableContext에 id가 없으면 종료
         if (!fromData.sortable.containerId || !toData.sortable.containerId)
           return;
@@ -194,8 +224,8 @@ export const useTreeStore = create<TreeState & TreeAction>()(
         // 부모 containerId가 같으면
         if (fromData.sortable.containerId === toData.sortable.containerId) {
           const parentId = fromData.sortable.containerId;
-          const fromId = from.id;
-          const toId = to.id;
+          const fromId = fromData.id;
+          const toId = toData.id;
           let prevChildFolderList: ChildFolderListType = [];
 
           set((state) => {
@@ -325,27 +355,38 @@ export const useTreeStore = create<TreeState & TreeAction>()(
           state.isDragging = isDragging; // 드래그 상태 설정
         });
       },
-      filterByParentId: (parentId) => {
-        const parentFolder = get().treeDataMap[parentId.toString()];
+      setDraggingFolderInfo: (draggingFolderInfo) => {
+        set((state) => {
+          state.draggingFolderInfo = draggingFolderInfo;
+        });
+      },
+      setHoverFolderId: (hoverFolderId) => {
+        set((state) => {
+          state.hoverFolderId = hoverFolderId;
+        });
+      },
+      getChildFolderListByParentFolderId: (parentFolderId) => {
+        const parentFolderInfo = get().treeDataMap[parentFolderId.toString()];
 
-        if (!parentFolder) {
+        if (!parentFolderInfo) {
           return [];
         }
 
-        const childFolderIdList = parentFolder.childFolderIdOrderedList;
-        const filteredFolderList = [];
+        const childFolderIdOrderedList =
+          parentFolderInfo.childFolderIdOrderedList;
+        const childFolderList = [];
 
-        for (const childFolderId of childFolderIdList) {
+        for (const childFolderId of childFolderIdOrderedList) {
           const curFolderInfo = get().treeDataMap[childFolderId];
 
           if (!curFolderInfo) {
             continue;
           }
 
-          filteredFolderList.push(curFolderInfo);
+          childFolderList.push(curFolderInfo);
         }
 
-        return filteredFolderList;
+        return childFolderList;
       },
       findFolderByName: (name: string) => {
         const map = get().treeDataMap;
