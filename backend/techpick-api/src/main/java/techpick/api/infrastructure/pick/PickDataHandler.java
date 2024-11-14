@@ -137,6 +137,17 @@ public class PickDataHandler {
 	}
 
 	@Transactional
+	public void movePickListToRecycleBin(Long userId, List<Long> pickIdList) {
+		// 휴지통에 픽 추가
+		Folder recycleBin = folderRepository.findRecycleBinByUserId(userId);
+		recycleBin.getChildPickIdOrderedList().addAll(0, pickIdList);
+
+		// 픽들의 부모를 휴지통으로 변경
+		List<Pick> pickList = pickRepository.findAllById(pickIdList);
+		pickList.forEach(pick -> pick.updateParentFolder(recycleBin));
+	}
+
+	@Transactional
 	public void deletePickList(PickCommand.Delete command) {
 		List<Long> pickIdList = command.idList();
 		for (Long pickId : pickIdList) {
