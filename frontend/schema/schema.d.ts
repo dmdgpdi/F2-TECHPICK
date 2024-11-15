@@ -180,6 +180,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/picks/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 픽 리스트 검색
+         * @description 해당 폴더에 내에 있는 픽 리스트 검색
+         */
+        get: operations["searchPickAndRssList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/picks/link": {
         parameters: {
             query?: never;
@@ -263,8 +283,6 @@ export interface components {
         "techpick.api.application.pick.dto.PickApiRequest$Create": {
             /** @example Record란? */
             title?: string;
-            /** @example Java 레코드에 관한 글 */
-            memo?: string;
             /** @example [
              *       4,
              *       5,
@@ -299,8 +317,9 @@ export interface components {
             /** Format: int64 */
             id?: number;
             title?: string;
-            memo?: string;
             linkInfo?: components["schemas"]["techpick.api.domain.link.dto.LinkInfo"];
+            /** Format: int64 */
+            parentFolderId?: number;
             tagIdOrderedList?: number[];
             /** Format: date-time */
             createdAt?: string;
@@ -363,8 +382,6 @@ export interface components {
             id: number;
             /** @example Record란 뭘까? */
             title?: string;
-            /** @example Java Record */
-            memo?: string;
             /** @example [
              *       4,
              *       5,
@@ -435,21 +452,15 @@ export interface components {
         "techpick.api.application.pick.dto.PickApiResponse$FolderPickList": {
             /** Format: int64 */
             folderId?: number;
-            pickList?: components["schemas"]["techpick.api.domain.pick.dto.PickResult$Pick"][];
+            pickList?: components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"][];
         };
-        "techpick.api.domain.pick.dto.PickResult$Pick": {
+        "techpick.api.application.pick.dto.PickSliceResponseTechpick.api.application.pick.dto.PickApiResponse$Pick": {
+            content?: components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"][];
             /** Format: int64 */
-            id?: number;
-            title?: string;
-            memo?: string;
-            linkInfo?: components["schemas"]["techpick.api.domain.link.dto.LinkInfo"];
-            /** Format: int64 */
-            parentFolderId?: number;
-            tagIdOrderedList?: number[];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
+            lastCursor?: number;
+            /** Format: int32 */
+            size?: number;
+            hasNext?: boolean;
         };
         "techpick.api.application.tag.dto.TagApiRequest$Delete": {
             /**
@@ -602,17 +613,12 @@ export interface operations {
     };
     getFolderChildPickList: {
         parameters: {
-            query: {
+            query?: {
                 /**
                  * @description 조회할 폴더 ID 목록
                  * @example 1, 2, 3
                  */
-                folderIdList: number[];
-                /**
-                 * @description 검색 토큰 목록
-                 * @example 리액트, 쿼리, 서버
-                 */
-                searchTokenList?: string[];
+                folderIdList?: number[];
             };
             header?: never;
             path?: never;
@@ -977,6 +983,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
+                };
+            };
+        };
+    };
+    searchPickAndRssList: {
+        parameters: {
+            query?: {
+                /**
+                 * @description 조회할 폴더 ID 목록
+                 * @example 1, 2, 3
+                 */
+                folderIdList?: number[];
+                /**
+                 * @description 검색 토큰 목록
+                 * @example 리액트, 쿼리, 서버
+                 */
+                searchTokenList?: string[];
+                /**
+                 * @description 검색 태그 ID 목록
+                 * @example 1, 2, 3
+                 */
+                tagIdList?: number[];
+                /**
+                 * @description 픽 시작 id 조회
+                 * @example 0
+                 */
+                cursor?: number;
+                /**
+                 * @description 한 페이지에 가져올 픽 개수
+                 * @example 20
+                 */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 조회 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickSliceResponseTechpick.api.application.pick.dto.PickApiResponse$Pick"];
                 };
             };
         };
