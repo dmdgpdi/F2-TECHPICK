@@ -52,7 +52,7 @@ jobs:
       - name: Deploy on AWS
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AWS_BASTION_IP }}
+          host: ${{ secrets.AWS_API_SERVER_IP }}
           port: 22
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_ACCESS_KEY }}
@@ -66,54 +66,28 @@ jobs:
             echo "Tagging Docker image..."
             docker tag minkyeki/techpick:${{ env.api-version }}-api-${{ github.sha }} techpick:${{ env.api-version }}-api-staging
             
-            echo "Saving Docker image as a tar file..."
-            docker save -o /home/ubuntu/techpick-${{ env.api-version }}-api.tar techpick:${{ env.api-version }}-api-staging
+            cd /home/ubuntu
+            rm -rf .env
+            touch .env
+            echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
+            echo "DOCKER_MYSQL_PASSWORD=${{ secrets.DOCKER_MYSQL_PASSWORD }}" >> .env
+            echo "DOCKER_MYSQL_DATABASE=${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}" >> .env
+            echo "DOCKER_MYSQL_URL=jdbc:mysql://techpick-mysql:3306/${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}?createDatabaseIfNotExist=true" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "JWT_ISSUER=${{ secrets.JWT_ISSUER }}" >> .env
+            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+            echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
+            echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
+            echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
+            echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env
             
-            echo "Copying Docker image to target server..."
-            scp -i /home/ubuntu/Techpick-Private.pem -T /home/ubuntu/techpick-${{ env.api-version }}-api.tar ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }}:/home/ubuntu/
+            echo "Restarting techpick-api service..."
+            docker-compose stop techpick-api
+            docker-compose rm -f techpick-api
+            docker-compose up -d techpick-api
             
-            # SSH into target server to load and run the Docker image
-            ssh -i /home/ubuntu/Techpick-Private.pem ubuntu@${{ secrets.API_SERVER_PRIVATE_IP }} <<'EOF'
-              echo "Loading Docker image on target server..."
-              docker load -i /home/ubuntu/techpick-${{ env.api-version }}-api.tar
-            
-              echo "Setting up environment variables..."
-              cd /home/ubuntu
-              rm -rf .env
-              touch .env
-              echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
-            
-              cd /home/ubuntu
-              rm -rf .env
-              touch .env
-              echo "DOCKER_MYSQL_USERNAME=${{ secrets.DOCKER_MYSQL_USERNAME }}" >> .env
-              echo "DOCKER_MYSQL_PASSWORD=${{ secrets.DOCKER_MYSQL_PASSWORD }}" >> .env
-              echo "DOCKER_MYSQL_DATABASE=${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}" >> .env
-              echo "DOCKER_MYSQL_URL=jdbc:mysql://techpick-mysql:3306/${{ secrets.DOCKER_MYSQL_DATABASE }}_${{ env.api-version }}?createDatabaseIfNotExist=true" >> .env
-              echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-              echo "JWT_ISSUER=${{ secrets.JWT_ISSUER }}" >> .env
-              echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-              echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-              echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env
-              echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> .env
-              echo "NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}" >> .env
-              echo "NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}" >> .env
-            
-              echo "Restarting techpick-api service..."
-              docker-compose stop techpick-api
-              docker-compose rm -f techpick-api
-              docker-compose up -d techpick-api
-
-              echo "Cleanup: Removing image and tar file on target server..."
-              rm /home/ubuntu/techpick-v2-api.tar
-              docker image prune -af
-            
-              echo "Removing tar file on target server..."
-              rm /home/ubuntu/techpick-v2-api.tar
-            EOF
-            
-            echo "Cleanup: Removing image and tar file on bastion..."
-            rm /home/ubuntu/techpick-v2-api.tar
+            echo "Cleanup Images..."
             docker image prune -af
 
       - name: Discord Webhook Notification
