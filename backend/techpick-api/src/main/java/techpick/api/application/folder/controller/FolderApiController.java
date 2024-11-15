@@ -19,12 +19,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import techpick.api.domain.folder.service.FolderService;
+import lombok.RequiredArgsConstructor;
 import techpick.api.application.folder.dto.FolderApiMapper;
 import techpick.api.application.folder.dto.FolderApiRequest;
 import techpick.api.application.folder.dto.FolderApiResponse;
+import techpick.api.domain.folder.service.FolderService;
 import techpick.security.annotation.LoginUserId;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -117,6 +117,7 @@ public class FolderApiController {
 		@ApiResponse(responseCode = "204", description = "폴더 이동 성공"),
 		@ApiResponse(responseCode = "400", description = "기본 폴더는 이동할 수 없습니다."),
 		@ApiResponse(responseCode = "401", description = "본인 폴더만 이동할 수 있습니다."),
+		@ApiResponse(responseCode = "406", description = "미분류폴더, 휴지통 폴더로 이동할 수 없습니다."),
 		@ApiResponse(responseCode = "406", description = "부모가 다른 폴더들을 동시에 이동할 수 없습니다.")
 	})
 	public ResponseEntity<Void> moveFolder(@LoginUserId Long userId,

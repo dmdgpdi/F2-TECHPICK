@@ -2,7 +2,9 @@ package techpick.api.infrastructure.pick;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,11 +107,15 @@ public class PickDataHandler {
 	@Transactional
 	public Pick updatePick(PickCommand.Update command) {
 		Pick pick = getPick(command.id());
+		pick.updateTitle(command.title());
+
+		// 제목만 수정하는 경우
+		if (ObjectUtils.isNotEmpty(command.title()) && Objects.isNull(command.tagIdOrderedList())) {
+			return pick;
+		}
 
 		// 태그 존재 여부 검증
 		validateTagIdList(command.tagIdOrderedList());
-
-		pick.updateTitle(command.title()).updateMemo(command.memo());
 		updateNewTagIdList(pick, command.tagIdOrderedList());
 		return pick;
 	}
@@ -137,6 +143,17 @@ public class PickDataHandler {
 	}
 
 	@Transactional
+	public void movePickListToRecycleBin(Long userId, List<Long> pickIdList) {
+		// 휴지통에 픽 추가
+		Folder recycleBin = folderRepository.findRecycleBinByUserId(userId);
+		recycleBin.getChildPickIdOrderedList().addAll(0, pickIdList);
+
+		// 픽들의 부모를 휴지통으로 변경
+		List<Pick> pickList = pickRepository.findAllById(pickIdList);
+		pickList.forEach(pick -> pick.updateParentFolder(recycleBin));
+	}
+
+	@Transactional
 	public void deletePickList(PickCommand.Delete command) {
 		List<Long> pickIdList = command.idList();
 		for (Long pickId : pickIdList) {
@@ -145,6 +162,14 @@ public class PickDataHandler {
 			pickTagRepository.deleteByPick(pick);
 			pickRepository.delete(pick);
 		}
+	}
+
+	@Transactional
+	public void attachTagToPick(Pick pick, Long tagId) {
+		Tag tag = tagRepository.findById(tagId)
+			.orElseThrow(ApiTagException::TAG_NOT_FOUND);
+		PickTag pickTag = PickTag.of(pick, tag);
+		pickTagRepository.save(pickTag);
 	}
 
 	@Transactional
@@ -158,9 +183,16 @@ public class PickDataHandler {
 	}
 
 	private void updateNewTagIdList(Pick pick, List<Long> newTagOrderList) {
+		// 1. 기존 태그와 새로운 태그를 비교하여 없어진 태그를 PickTag 테이블에서 제거
 		pick.getTagIdOrderedList().stream()
 			.filter(tagId -> !newTagOrderList.contains(tagId))
 			.forEach(tagId -> detachTagFromPick(pick, tagId));
+
+		// 2. 새로운 태그 중 기존에 없는 태그를 PickTag 테이블에 추가
+		newTagOrderList.stream()
+			.filter(tagId -> !pick.getTagIdOrderedList().contains(tagId))
+			.forEach(tagId -> attachTagToPick(pick, tagId));
+
 		pick.updateTagOrderList(newTagOrderList);
 	}
 
