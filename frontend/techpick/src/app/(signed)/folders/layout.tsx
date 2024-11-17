@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 import { FolderTree, FolderAndPickDndContextProvider } from '@/components';
 import { CurrentPathIndicator } from '@/components/FolderPathIndicator/CurrentPathIndicator';
 import { SearchWidget } from '@/components/SearchWidget/SearchWidget';
@@ -21,7 +21,9 @@ export default function FolderLayout({ children }: PropsWithChildren) {
               <SearchWidget />
             </div>
             <div className={ListViewerHeaderSubLayout}>
-              <CurrentPathIndicator />
+              <Suspense>
+                <CurrentPathIndicator />
+              </Suspense>
             </div>
           </div>
           {children}
