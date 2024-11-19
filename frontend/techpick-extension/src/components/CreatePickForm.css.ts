@@ -36,6 +36,7 @@ export const titleInputStyle = style({
     outline: 'none',
     backgroundColor: colorVars.lightGray,
     transition: 'border 0.3s ease',
+    boxShadow: '4px 4px 0px 0px rgba(0, 0, 0, 0.2)',
   },
 });
 
@@ -62,7 +63,7 @@ export const plusIconStyle = style({
 
 export const footerStyle = style({
   display: 'flex',
-  flexDirection: 'row-reverse',
+  justifyContent: 'space-between',
   marginTop: '8px',
   paddingTop: '12px',
   width: '288px',
@@ -71,7 +72,7 @@ export const footerStyle = style({
   textAlign: 'end',
 });
 
-export const footerTextStyle = style({
+export const footerLinkStyle = style({
   paddingRight: '4px',
   color: colorVars.gray9,
   fontSize: '12px',
@@ -81,4 +82,11 @@ export const footerTextStyle = style({
     transition: 'color 0.3s ease',
     color: colorVars.point,
   },
+});
+
+export const footerTextStyle = style({
+  paddingRight: '4px',
+  color: colorVars.gray9,
+  fontSize: '12px',
+  fontWeight: '600',
 });

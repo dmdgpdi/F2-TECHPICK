@@ -15,6 +15,7 @@ import {
   plusIconStyle,
   footerStyle,
   footerTextStyle,
+  footerLinkStyle,
 } from './CreatePickForm.css';
 import { useEffect, useRef, useState } from 'react';
 import { FolderSelect } from './FolderSelect';
@@ -55,6 +56,12 @@ export function UpdatePickForm({
     [tagList, replaceSelectedTagList]
   );
 
+  useEffect(() => {
+    if (titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
+  }, []);
+
   const onSubmit = () => {
     const userModifiedTitle = titleInputRef.current?.value ?? '';
 
@@ -62,9 +69,13 @@ export function UpdatePickForm({
       id,
       title: DOMPurify.sanitize(userModifiedTitle),
       tagIdOrderedList: selectedTagList.map((tag) => tag.id),
+      parentFolderId: Number(selectedFolderId),
     })
       .then(() => {
         notifySuccess('수정되었습니다!');
+        setTimeout(() => {
+          window.close();
+        }, 900);
       })
       .catch(() => {
         notifyError(`북마크가 실패했습니다!`);
@@ -99,8 +110,9 @@ export function UpdatePickForm({
 
         <div className={footerStyle}>
           <a href={PUBLIC_DOMAIN} target="_blank">
-            <p className={footerTextStyle}>app.techpick.org</p>
+            <p className={footerLinkStyle}>app.techpick.org</p>
           </a>
+          <p className={footerTextStyle}>수정하기</p>
         </div>
       </div>
       <button

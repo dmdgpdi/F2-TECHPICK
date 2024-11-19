@@ -9,6 +9,7 @@ export const tagDialogPortalLayout = style({
   top: '0',
   zIndex: '1',
   backgroundColor: colorVars.lightGray,
+  boxShadow: '4px 4px 0px 0px rgba(0, 0, 0, 0.2)',
 });
 
 export const commandInputStyle = style({
@@ -26,8 +27,6 @@ export const tagListStyle = style({
   maxHeight: '90px',
   border: `1px solid black`,
   borderTop: 'none',
-  padding: '4px 0',
-  boxShadow: '4px 4px 0px 0px rgba(0, 0, 0, 0.2)',
   overflowY: 'auto',
   '::-webkit-scrollbar': {
     display: 'none',
@@ -51,7 +50,7 @@ export const tagListItemStyle = style({
   // 선택된 상태일 때
   selectors: {
     '&[data-selected="true"]': {
-      backgroundColor: color.tagSelectedBackground,
+      backgroundColor: colorVars.softPoint,
     },
     '&[data-disabled="true"]': {
       display: 'none',
@@ -60,7 +59,7 @@ export const tagListItemStyle = style({
 });
 
 export const tagListItemContentStyle = style({
-  maxWidth: `calc(${SelectedTagCommonStyle.width} - 34px)`, // 26px은 생성 텍스트의 영역 8px는 패딩
+  maxWidth: `calc(${SelectedTagCommonStyle.width} - 38px)`, // 26px은 생성 텍스트의 영역 12px는 패딩
   height: '20px',
   lineHeight: '20px',
   borderRadius: '4px',
@@ -73,7 +72,7 @@ export const tagListItemContentStyle = style({
 });
 
 export const tagCreateTextStyle = style({
-  width: '26px',
+  width: '28px',
   fontSize: '14px',
   color: color.font,
 });

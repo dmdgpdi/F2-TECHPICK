@@ -35,16 +35,28 @@ export function BookmarkPage() {
       const rootFolderChildFolders = await getRootFolderChildFolders();
 
       for (const folderInfo of rootFolderChildFolders) {
-        if (folderInfo.folderType !== 'ROOT') {
+        if (
+          folderInfo.folderType !== 'ROOT' &&
+          folderInfo.folderType !== 'RECYCLE_BIN'
+        ) {
           folderInfoList.push(folderInfo);
         }
       }
 
       for (const folderInfo of basicFolders) {
-        if (folderInfo.folderType !== 'ROOT') {
+        if (
+          folderInfo.folderType !== 'ROOT' &&
+          folderInfo.folderType !== 'RECYCLE_BIN'
+        ) {
           folderInfoList.push(folderInfo);
         }
       }
+
+      folderInfoList.sort((a, b) => {
+        return (
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      });
 
       setFolderInfoList(folderInfoList);
       setIsFolderInfoListLoading(false);
