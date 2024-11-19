@@ -1,22 +1,24 @@
 import type { ReactNode } from 'react';
 import { PickDnDCard } from './PickDnDCard';
 import { PickDnDCardListLayout } from './PickDnDCardListLayout';
+import { PickDndRecord } from './PickDndRecord';
+import { PickDndRecordListLayout } from './PickDndRecordListLayout';
 import type {
   PickViewItemComponentProps,
   PickViewItemListLayoutComponentProps,
 } from './PickListViewer';
-import type { PickInfoType } from '@/types';
+import type { PickInfoType, PickRenderModeType } from '@/types';
 
 export function DraggablePickListViewer({
   pickList,
-  viewType = 'card',
+  viewType = 'list',
   folderId,
 }: PickListViewerProps) {
   const { PickViewItemComponent, PickViewItemListLayoutComponent } =
     DND_PICK_LIST_VIEW_TEMPLATES[viewType];
 
   return (
-    <PickViewItemListLayoutComponent folderId={folderId}>
+    <PickViewItemListLayoutComponent folderId={folderId} viewType={viewType}>
       {pickList.map((pickInfo) => (
         <PickViewItemComponent key={pickInfo.id} pickInfo={pickInfo} />
       ))}
@@ -27,23 +29,22 @@ export function DraggablePickListViewer({
 interface PickListViewerProps {
   pickList: PickInfoType[];
   folderId: number;
-  viewType?: DnDViewTemplateType;
+  viewType?: PickRenderModeType;
 }
 
 const DND_PICK_LIST_VIEW_TEMPLATES: Record<
-  DnDViewTemplateType,
+  PickRenderModeType,
   DnDViewTemplateValueType
 > = {
   card: {
     PickViewItemComponent: PickDnDCard,
     PickViewItemListLayoutComponent: PickDnDCardListLayout,
   },
+  list: {
+    PickViewItemComponent: PickDndRecord,
+    PickViewItemListLayoutComponent: PickDndRecordListLayout,
+  },
 };
-
-/**
- * @description DnDViewTemplateType은 Drag&Drop이 가능한 UI 중 무엇을 보여줄지 나타냅니다. ex) card, list
- */
-type DnDViewTemplateType = 'card';
 
 interface DnDViewTemplateValueType {
   PickViewItemListLayoutComponent: (
@@ -53,6 +54,9 @@ interface DnDViewTemplateValueType {
 }
 
 export type PickViewDnDItemListLayoutComponentProps =
-  PickViewItemListLayoutComponentProps<{ folderId: number }>;
+  PickViewItemListLayoutComponentProps<{
+    folderId: number;
+    viewType: PickRenderModeType;
+  }>;
 
 export type PickViewDnDItemComponentProps = PickViewItemComponentProps;

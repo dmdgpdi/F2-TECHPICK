@@ -1,19 +1,17 @@
-'use client';
-
 import { PickViewDnDItemListLayoutComponentProps } from './DraggablePickListViewer';
-import { pickCardGridLayoutStyle } from './pickCardGridLayout.css';
 import { PickListSortableContext } from './PickListSortableContext';
+import { PickRecordListLayout } from './PickRecordListLayout';
 
-export function PickDnDCardListLayout({
+export function PickDndRecordListLayout({
   children,
-  viewType,
   folderId,
+  viewType,
 }: PickViewDnDItemListLayoutComponentProps) {
   return (
-    <div className={pickCardGridLayoutStyle}>
+    <PickRecordListLayout>
       <PickListSortableContext folderId={folderId} viewType={viewType}>
         {children}
       </PickListSortableContext>
-    </div>
+    </PickRecordListLayout>
   );
 }

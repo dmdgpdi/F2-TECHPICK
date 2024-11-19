@@ -1,12 +1,17 @@
 'use client';
 
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { usePickStore } from '@/stores/pickStore/pickStore';
+import {
+  SortableContext,
+  rectSortingStrategy,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { usePickStore } from '@/stores';
 import { PickViewDnDItemListLayoutComponentProps } from './DraggablePickListViewer';
 
 export function PickListSortableContext({
   folderId,
   children,
+  viewType,
 }: PickViewDnDItemListLayoutComponentProps) {
   const {
     getOrderedPickIdListByFolderId,
@@ -23,11 +28,17 @@ export function PickListSortableContext({
       )
     : orderedPickIdList;
 
+  /**
+   * @description card일때와 vertical일 때 렌더링이 다릅니다.
+   */
+  const strategy =
+    viewType === 'card' ? rectSortingStrategy : verticalListSortingStrategy;
+
   return (
     <SortableContext
       id={`${folderId}`}
       items={orderedPickIdListWithoutSelectedIdList}
-      strategy={rectSortingStrategy}
+      strategy={strategy}
     >
       {children}
     </SortableContext>
