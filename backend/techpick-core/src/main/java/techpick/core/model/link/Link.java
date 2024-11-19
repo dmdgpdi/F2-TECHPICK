@@ -32,7 +32,7 @@ public class Link {
 	@Column(name = "url", nullable = false, columnDefinition = "VARCHAR(600)", unique = true)
 	private String url;
 
-	@Column(name = "title", columnDefinition = "VARCHAR(100)")
+	@Column(name = "title", columnDefinition = "longblob")
 	private String title;
 
 	@Column(name = "description", columnDefinition = "VARCHAR(600)")
