@@ -70,7 +70,7 @@ spring:
         format_sql: false
         show_sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
   datasource:
     url: ${DOCKER_MYSQL_URL}
     username: ${DOCKER_MYSQL_USERNAME}
