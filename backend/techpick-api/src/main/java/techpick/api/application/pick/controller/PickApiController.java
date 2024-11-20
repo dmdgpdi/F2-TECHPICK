@@ -126,7 +126,7 @@ public class PickApiController {
 	})
 	public ResponseEntity<PickApiResponse.Pick> updatePick(@LoginUserId Long userId,
 		@Valid @RequestBody PickApiRequest.Update request) {
-		if (request.title().length() > 200) {
+		if (request.title() && 200 < request.title().length()) {
 			throw ApiPickException.PICK_TITLE_TOO_LONG();
 		}
 
