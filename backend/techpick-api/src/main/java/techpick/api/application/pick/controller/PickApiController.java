@@ -1,6 +1,7 @@
 package techpick.api.application.pick.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -126,7 +127,7 @@ public class PickApiController {
 	})
 	public ResponseEntity<PickApiResponse.Pick> updatePick(@LoginUserId Long userId,
 		@Valid @RequestBody PickApiRequest.Update request) {
-		if (request.title() && 200 < request.title().length()) {
+		if (!Objects.isNull(request.title()) && 200 < request.title().length()) {
 			throw ApiPickException.PICK_TITLE_TOO_LONG();
 		}
 
