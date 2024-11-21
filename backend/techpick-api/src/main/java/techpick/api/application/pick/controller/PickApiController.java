@@ -112,7 +112,7 @@ public class PickApiController {
 	})
 	public ResponseEntity<PickApiResponse.Pick> savePick(@LoginUserId Long userId,
 		@Valid @RequestBody PickApiRequest.Create request) {
-		if (request.title().length() > 200) {
+		if (!Objects.isNull(request.title()) && 200 < request.title().length()) {
 			throw ApiPickException.PICK_TITLE_TOO_LONG();
 		}
 
