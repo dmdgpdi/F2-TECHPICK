@@ -49,7 +49,7 @@ public class Pick extends BaseEntity {
 	private User user;
 
 	// 북마크 대상 링크
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "link_id", nullable = false)
 	private Link link;
 
