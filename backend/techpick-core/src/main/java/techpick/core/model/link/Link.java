@@ -2,6 +2,8 @@ package techpick.core.model.link;
 
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,10 +34,12 @@ public class Link {
 	@Column(name = "url", nullable = false, columnDefinition = "VARCHAR(600)", unique = true)
 	private String url;
 
-	@Column(name = "title", columnDefinition = "VARCHAR(100)")
+	// title이 한글 200자 이상인 경우가 있어 text타입으로 변경
+	@Column(name = "title", columnDefinition = "TEXT")
 	private String title;
 
-	@Column(name = "description", columnDefinition = "VARCHAR(600)")
+	// description이 한글 300자 이상인 경우가 있어 text타입으로 변경
+	@Column(name = "description", columnDefinition = "TEXT")
 	private String description;
 
 	@Column(name = "imageUrl", columnDefinition = "VARCHAR(600)")
@@ -44,10 +48,21 @@ public class Link {
 	@Column(name = "invalidatedAt_at")
 	private LocalDateTime invalidatedAt;
 
+	public static Link createLinkByUrl(String url) {
+		return new Link(url, "", "", "", null);
+	}
+
+	// null 값이 아닌 필드만 업데이트
 	public Link updateMetadata(String title, String description, String imageUrl) {
-		this.title = title;
-		this.description = description;
-		this.imageUrl = imageUrl;
+		if (!StringUtils.isBlank(title)) {
+			this.title = title;
+		}
+		if (!StringUtils.isBlank(description)) {
+			this.description = description;
+		}
+		if (!StringUtils.isBlank(imageUrl)) {
+			this.imageUrl = imageUrl;
+		}
 		return this;
 	}
 

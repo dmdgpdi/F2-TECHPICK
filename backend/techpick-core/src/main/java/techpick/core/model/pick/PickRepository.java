@@ -24,4 +24,6 @@ public interface PickRepository extends JpaRepository<Pick, Long> {
 	Optional<Pick> findByIdForUpdate(Long id);
 
 	Optional<Pick> findByUserAndLink(User user, Link link);
+
+	boolean existsByUserIdAndLink(Long userId, Link link);
 }
