@@ -201,7 +201,7 @@ public class PickDataHandler {
 	@Transactional
 	public void detachTagFromPickTag(Pick pick, Long tagId) {
 		pickTagRepository.findByPickAndTagId(pick, tagId)
-			.ifPresent(pickTag -> pickTagRepository.deleteByPickAndTagId(pick, tagId));
+			.ifPresent(pickTagRepository::delete);
 	}
 
 	// 부모 폴더의 픽 리스트에 추가
