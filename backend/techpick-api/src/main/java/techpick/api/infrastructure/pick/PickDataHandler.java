@@ -3,6 +3,9 @@ package techpick.api.infrastructure.pick;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,6 +118,11 @@ public class PickDataHandler {
 	 * 부모 폴더 픽 리스트에서 pick 제거 후
 	 * 이동하는 폴더 픽 리스트에 pick 추가
 	 */
+	@Retryable(
+		value = {ObjectOptimisticLockingFailureException.class},
+		maxAttempts = 3,
+		backoff = @Backoff(delay = 100)
+	)
 	@Transactional
 	public Pick updatePick(PickCommand.Update command) {
 		Pick pick = getPick(command.id());
@@ -192,7 +200,8 @@ public class PickDataHandler {
 
 	@Transactional
 	public void detachTagFromPickTag(Pick pick, Long tagId) {
-		pickTagRepository.deleteByPickAndTagId(pick, tagId);
+		pickTagRepository.findByPickAndTagId(pick, tagId)
+			.ifPresent(pickTag -> pickTagRepository.deleteByPickAndTagId(pick, tagId));
 	}
 
 	// 부모 폴더의 픽 리스트에 추가
