@@ -3,6 +3,7 @@ const API_ENDPOINTS = {
   LOCATION: 'location',
   BASIC: 'basic',
   PICKS: 'picks',
+  TAGS: 'tags',
 };
 
 export const API_URLS = {
@@ -24,4 +25,9 @@ export const API_URLS = {
     `${cursor ? '&cursor=' + cursor : ''}` +
     `${size ? '&size=' + size : ''}`,
   MOVE_PICKS: `${API_ENDPOINTS.PICKS}/${API_ENDPOINTS.LOCATION}`,
+  UPDATE_PICKS: `${API_ENDPOINTS.PICKS}`,
+  CREATE_TAGS: `${API_ENDPOINTS.TAGS}`,
+  DELETE_TAGS: `${API_ENDPOINTS.TAGS}`,
+  UPDATE_TAGS: `${API_ENDPOINTS.TAGS}`,
+  GET_TAGS: `${API_ENDPOINTS.TAGS}`,
 };
