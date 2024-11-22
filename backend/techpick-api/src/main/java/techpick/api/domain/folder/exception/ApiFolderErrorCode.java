@@ -30,7 +30,7 @@ public enum ApiFolderErrorCode implements ApiErrorCode {
 		("FO-008", HttpStatus.NOT_ACCEPTABLE, "부모 폴더가 올바르지 않음", ErrorLevel.SHOULD_NOT_HAPPEN()),
 	// TODO: folder depth 추가 시 예외 삭제 예정
 	ROOT_FOLDER_SEARCH_NOT_ALLOWED
-		("FO-009", HttpStatus.NOT_ACCEPTABLE, "루트 폴더에 대한 검색은 허용되지 않음", ErrorLevel.SHOULD_NOT_HAPPEN()),
+		("FO-009", HttpStatus.NOT_ACCEPTABLE, "루트 폴더에 대한 검색은 허용되지 않음.", ErrorLevel.SHOULD_NOT_HAPPEN()),
 	;
 
 	private final String code;
