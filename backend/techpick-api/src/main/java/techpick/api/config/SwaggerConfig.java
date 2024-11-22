@@ -12,7 +12,6 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import techpick.security.config.SecurityProperties;
 
-// Swagger
 @Configuration
 public class SwaggerConfig {
 
