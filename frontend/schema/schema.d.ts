@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/tags": {
+    "/api/tag": {
         parameters: {
             query?: never;
             header?: never;
@@ -12,28 +12,72 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 태그 조회
-         * @description 사용자가 등록한 전체 태그를 조회합니다.
+         * 태그 리스트 조회
+         * @description 자신이 등록한 태그 리스트를 조회한다. 태그는 order 오름차순으로 정렬되어있음.
          */
-        get: operations["getAllUserTag"];
-        put?: never;
-        /**
-         * 태그 추가
-         * @description 새로운 태그를 추가합니다.
-         */
-        post: operations["createTag"];
-        /**
-         * 태그 삭제
-         * @description 사용자가 등록한 태그를 삭제합니다.
-         */
-        delete: operations["deleteTag"];
-        options?: never;
-        head?: never;
+        get: operations["getTagListByUser"];
         /**
          * 태그 수정
-         * @description 사용자가 등록한 태그를 수정합니다.
+         * @description 자신이 등록한 태그 리스트를 수정한다.
          */
-        patch: operations["updateTag"];
+        put: operations["updateTagList"];
+        /**
+         * 태그 생성
+         * @description 태그를 생성합니다. 생성된 태그는 가장 마지막 순서에 위치합니다.
+         */
+        post: operations["createTag"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/structures/picks/{pickId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 픽 이동
+         * @description 픽을 특정 폴더 안으로 이동
+         */
+        put: operations["movePick"];
+        post?: never;
+        /**
+         * 휴지통에 있는 픽 삭제
+         * @description 휴지통에 있는 픽 삭제, 휴지통이 아닌 다른곳에 있는 픽일 경우 예외발생
+         */
+        delete: operations["deletePick"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/structures/folders/{folderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * 폴더 이동
+         * @description 폴더를 특정 폴더 안으로 이동
+         */
+        put: operations["moveFolder"];
+        post?: never;
+        /**
+         * 휴지통에 있는 폴더 삭제
+         * @description 휴지통에 있는 폴더 삭제, 휴지통이 아닌 다른곳에 있는 폴더일 경우 예외발생
+         */
+        delete: operations["deleteFolder"];
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/picks": {
@@ -44,28 +88,48 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 폴더 리스트 내 픽 리스트 조회
-         * @description 해당 폴더 리스트 각각의 픽 리스트를 조회합니다.
+         * 폴더에 있는 픽 리스트 조회
+         * @description 해당 폴더에 있는 모든 픽 리스트를 조회합니다.
          */
-        get: operations["getFolderChildPickList"];
-        put?: never;
+        get: operations["getPickListByUser_1"];
+        /**
+         * 픽 수정
+         * @description 픽을 수정합니다. (제목, 내용, 태그)
+         */
+        put: operations["updatePick"];
         /**
          * 픽 생성
          * @description 픽을 생성합니다.
          */
-        post: operations["savePick"];
+        post: operations["createPick"];
         /**
          * 픽 삭제
-         * @description 휴지통에 있는 픽만 삭제 가능합니다.
+         * @description 픽을 수정합니다. (제목, 내용, 태그)
          */
-        delete: operations["deletePick"];
+        delete: operations["deletePick_1"];
         options?: never;
         head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/folders/{folderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
         /**
-         * 픽 내용 수정
-         * @description 픽 내용(제목, 메모)을 수정합니다.
+         * 폴더 이름 변경
+         * @description 폴더 이름 변경
          */
-        patch: operations["updatePick"];
+        put: operations["updateFolderName"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/folders": {
@@ -76,91 +140,59 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 루트 폴더와 하위 리스트 조회
-         * @description 사용자의 루트 폴더와 루트 하위 전체 폴더를 조회합니다.
+         * 기본 폴더 Id 조회
+         * @description 현재 로그인된 사용자의 기본폴더(ROOT, UNCLASSIFIED, RECYCLE_BIN)의 id를 조회합니다.
          */
-        get: operations["getAllRootFolderList"];
+        get: operations["getBasicFolderIdMap"];
         put?: never;
         /**
-         * 폴더 추가
-         * @description 새로운 폴더를 추가합니다.
+         * 폴더 생성
+         * @description 새로운 폴더를 생성. 임시 생성된 상태이며, 적절한 위치로 이동해야 사용 가능함 create->move 까지가 한세트
          */
         post: operations["createFolder"];
-        /**
-         * 폴더 삭제
-         * @description 사용자가 등록한 폴더를 삭제합니다.
-         */
-        delete: operations["deleteFolder"];
+        delete?: never;
         options?: never;
         head?: never;
-        /**
-         * 폴더 수정
-         * @description 사용자가 등록한 폴더를 수정합니다.
-         */
-        patch: operations["updateFolder"];
+        patch?: never;
         trace?: never;
     };
-    "/api/tags/location": {
+    "/rss": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["getNewRss"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /**
-         * 태그 이동
-         * @description 사용자가 등록한 태그의 순서를 변경합니다.
-         */
-        patch: operations["moveTag"];
+        patch?: never;
         trace?: never;
     };
-    "/api/picks/location": {
+    "/api/structures": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * 구조 json 조회
+         * @description 현재 로그인된 유저의 db에 저장되어있는 json 조회
+         */
+        get: operations["getStructure"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /**
-         * 픽 이동
-         * @description 픽을 같은 폴더 혹은 다른 폴더로 이동합니다.
-         */
-        patch: operations["movePick"];
+        patch?: never;
         trace?: never;
     };
-    "/api/folders/location": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * 폴더 이동
-         * @description 사용자가 등록한 폴더를 이동합니다.
-         */
-        patch: operations["moveFolder"];
-        trace?: never;
-    };
-    "/api/picks/{id}": {
+    "/api/picks/{pickId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -169,9 +201,9 @@ export interface paths {
         };
         /**
          * 픽 상세 조회
-         * @description 픽을 상세 조회합니다.
+         * @description 하나의 픽에 대한 상세 정보를 조회합니다.
          */
-        get: operations["getPick"];
+        get: operations["getPickById"];
         put?: never;
         post?: never;
         delete?: never;
@@ -180,7 +212,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/picks/search": {
+    "/api/picks/url": {
         parameters: {
             query?: never;
             header?: never;
@@ -188,10 +220,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 픽 리스트 검색
-         * @description 해당 폴더에 내에 있는 픽 리스트 검색
+         * URL로 픽 조회
+         * @description URL로 픽 id를 획득합니다.
          */
-        get: operations["searchPick"];
+        get: operations["getPickByUrl"];
         put?: never;
         post?: never;
         delete?: never;
@@ -200,18 +232,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/picks/link": {
+    "/api/links": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * 링크 픽 여부 조회
-         * @description 해당 링크를 픽한 적이 있는지 확인합니다.
-         */
-        get: operations["getPickUrl"];
+        /** @description 링크 URL로 링크를 조회하는 API */
+        get: operations["getByUrl"];
         put?: never;
         post?: never;
         delete?: never;
@@ -220,18 +249,33 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/folders/{id}/children": {
+    "/api/links/{linkId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /**
-         * 자식 폴더 리스트 조회
-         * @description 특정 폴더의 자식 폴더 리스트를 조회합니다.
-         */
-        get: operations["getChildrenFolder"];
+        /** @description 링크 ID로 링크를 조회하는 API */
+        get: operations["getById"];
+        put?: never;
+        post?: never;
+        /** @description 링크 ID로 링크를 삭제하는 API */
+        delete: operations["deleteById"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/links/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 모든 링크를 조회하는 API */
+        get: operations["getAll"];
         put?: never;
         post?: never;
         delete?: never;
@@ -240,7 +284,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/folders/basic": {
+    "/api/folders/parent/{folderId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -248,13 +292,33 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * 기본 폴더 리스트 조회
-         * @description 사용자의 루트, 미분류, 휴지통 폴더를 조회합니다.
+         * 자식 폴더 조회
+         * @description 특정 폴더에 속한 폴더를 조회합니다. 본인의 폴더가 아니면 403예외가 발생합니다.
          */
-        get: operations["getBasicFolderList"];
+        get: operations["getFolderListByParentFolderId"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tag/{tagId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * 태그 삭제
+         * @description 자신이 등록한 태그를 삭제한다.
+         */
+        delete: operations["deleteTagById"];
         options?: never;
         head?: never;
         patch?: never;
@@ -264,236 +328,136 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        "techpick.api.application.tag.dto.TagApiRequest$Create": {
-            /** @example SpringBoot */
-            name: string;
-            /**
-             * Format: int32
-             * @example 12
-             */
+        TagUpdateRequest: {
+            /** Format: int64 */
+            tagId?: number;
+            tagName?: string;
+            /** Format: int32 */
+            tagOrder?: number;
+            /** Format: int32 */
             colorNumber: number;
         };
-        "techpick.api.application.tag.dto.TagApiResponse$Create": {
+        TagResponse: {
             /** Format: int64 */
-            id?: number;
-            name?: string;
+            tagId?: number;
+            tagName?: string;
+            /** Format: int32 */
+            tagOrder?: number;
             /** Format: int32 */
             colorNumber?: number;
+            /** Format: int64 */
+            userId?: number;
         };
-        "techpick.api.application.pick.dto.PickApiRequest$Create": {
-            /** @example Record란? */
-            title?: string;
-            /** @example [
-             *       4,
-             *       5,
-             *       2,
-             *       1,
-             *       3
-             *     ] */
-            tagIdOrderedList?: number[];
-            /**
-             * Format: int64
-             * @example 1
-             */
+        FolderServerNode: WithRequired<components["schemas"]["ServerNode"], "id" | "type"> & {
+            /** Format: int64 */
+            folderId: number;
+            children: (components["schemas"]["FolderServerNode"] | components["schemas"]["PickServerNode"])[];
+        };
+        PickServerNode: WithRequired<components["schemas"]["ServerNode"], "id" | "type"> & {
+            /** Format: int64 */
+            pickId: number;
+        };
+        ServerNode: {
+            id: string;
+            /** @enum {string} */
+            type: "pick" | "folder";
+        };
+        StructureMoveRequest: {
+            /** Format: int64 */
             parentFolderId?: number;
-            linkInfo?: components["schemas"]["techpick.api.domain.link.dto.LinkInfo"];
+            structure?: components["schemas"]["StructureServerNode"];
         };
-        "techpick.api.domain.link.dto.LinkInfo": {
-            /** @example https://velog.io/@hyeok_1212/Java-Record-%EC%82%AC%EC%9A%A9%ED%95%98%EC%8B%9C%EB%82%98%EC%9A%94 */
-            url: string;
-            /** @example [Java] Record 사용하시나요? */
+        StructureServerNode: {
+            root: (components["schemas"]["FolderServerNode"] | components["schemas"]["PickServerNode"])[];
+            recycleBin: (components["schemas"]["FolderServerNode"] | components["schemas"]["PickServerNode"])[];
+        };
+        PickUpdateRequest: {
+            /** Format: int64 */
+            id?: number;
             title?: string;
-            /** @example IntelliJ : 레코드 써봐 */
-            description?: string;
-            /** @example https://velog.velcdn.com/images/hyeok_1212/post/5ea148fb-1490-4b03-811e-222b4d26b65e/image.png */
+            memo?: string;
+            tagIdList?: number[];
+        };
+        LinkUrlResponse: {
+            /** Format: int64 */
+            id?: number;
+            url?: string;
             imageUrl?: string;
-            /**
-             * Format: date-time
-             * @example 2024-10-19T10:46:30.035Z
-             */
-            invalidatedAt?: string;
         };
-        "techpick.api.application.pick.dto.PickApiResponse$Pick": {
+        PickResponse: {
             /** Format: int64 */
             id?: number;
             title?: string;
-            linkInfo?: components["schemas"]["techpick.api.domain.link.dto.LinkInfo"];
-            /** Format: int64 */
-            parentFolderId?: number;
-            tagIdOrderedList?: number[];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        "techpick.api.application.folder.dto.FolderApiRequest$Create": {
-            /** @example backend */
-            name: string;
-            /**
-             * Format: int64
-             * @example 3
-             */
-            parentFolderId: number;
-        };
-        "techpick.api.application.folder.dto.FolderApiResponse": {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-            /**
-             * @example GENERAL
-             * @enum {string}
-             */
-            folderType?: "UNCLASSIFIED" | "RECYCLE_BIN" | "ROOT" | "GENERAL";
-            /** Format: int64 */
-            parentFolderId?: number;
-            childFolderIdOrderedList?: number[];
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-        };
-        "techpick.api.application.tag.dto.TagApiRequest$Update": {
-            /**
-             * Format: int64
-             * @example 2
-             */
-            id: number;
-            /** @example new tag name */
-            name: string;
-            /**
-             * Format: int32
-             * @example 7
-             */
-            colorNumber: number;
-        };
-        "techpick.api.application.tag.dto.TagApiRequest$Move": {
-            /**
-             * Format: int64
-             * @example 3
-             */
-            id: number;
-            /**
-             * Format: int32
-             * @example 1
-             */
-            orderIdx: number;
-        };
-        "techpick.api.application.pick.dto.PickApiRequest$Update": {
-            /**
-             * Format: int64
-             * @example 1
-             */
-            id: number;
-            /** @example Record란 뭘까? */
-            title?: string;
-            /**
-             * Format: int64
-             * @example 3
-             */
-            parentFolderId?: number;
-            /** @example [
-             *       4,
-             *       5,
-             *       2,
-             *       1
-             *     ] */
-            tagIdOrderedList?: number[];
-        };
-        "techpick.api.application.pick.dto.PickApiRequest$Move": {
-            /** @example [
-             *       1,
-             *       2
-             *     ] */
-            idList: number[];
-            /**
-             * Format: int64
-             * @example 3
-             */
-            destinationFolderId: number;
-            /**
-             * Format: int32
-             * @example 0
-             */
-            orderIdx?: number;
-        };
-        "techpick.api.application.folder.dto.FolderApiRequest$Update": {
-            /**
-             * Format: int64
-             * @example 3
-             */
-            id: number;
-            /** @example SpringBoot */
-            name: string;
-        };
-        "techpick.api.application.folder.dto.FolderApiRequest$Move": {
-            /** @example [
-             *       12,
-             *       11,
-             *       4,
-             *       5,
-             *       1,
-             *       6
-             *     ] */
-            idList: number[];
-            /**
-             * Format: int64
-             * @example 7
-             */
-            parentFolderId: number;
-            /**
-             * Format: int64
-             * @example 3
-             */
-            destinationFolderId: number;
-            /**
-             * Format: int32
-             * @example 2
-             */
-            orderIdx?: number;
-        };
-        "techpick.api.application.tag.dto.TagApiResponse$Read": {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-            /** Format: int32 */
-            colorNumber?: number;
-        };
-        "techpick.api.application.pick.dto.PickApiResponse$FolderPickList": {
+            memo?: string;
             /** Format: int64 */
             folderId?: number;
-            pickList?: components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"][];
-        };
-        "techpick.api.application.pick.dto.PickSliceResponseTechpick.api.application.pick.dto.PickApiResponse$Pick": {
-            content?: components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"][];
             /** Format: int64 */
-            lastCursor?: number;
+            userId?: number;
+            tagList?: components["schemas"]["TagResponse"][];
+            linkUrlResponse?: components["schemas"]["LinkUrlResponse"];
+        };
+        FolderUpdateRequest: {
+            name?: string;
+        };
+        TagCreateRequest: {
+            tagName: string;
             /** Format: int32 */
-            size?: number;
-            hasNext?: boolean;
+            colorNumber: number;
         };
-        "techpick.api.application.tag.dto.TagApiRequest$Delete": {
-            /**
-             * Format: int64
-             * @example 4
-             */
-            id: number;
+        LinkRequest: {
+            url?: string;
+            title?: string;
+            description?: string;
+            imageUrl?: string;
         };
-        "techpick.api.application.pick.dto.PickApiRequest$Delete": {
-            /** @example [
-             *       1
-             *     ] */
-            idList: number[];
+        PickCreateRequest: {
+            memo?: string;
+            title?: string;
+            tagIdList?: number[];
+            linkRequest?: components["schemas"]["LinkRequest"];
         };
-        "techpick.api.application.folder.dto.FolderApiRequest$Delete": {
-            /** @example [
-             *       12,
-             *       11,
-             *       4,
-             *       5,
-             *       1,
-             *       6
-             *     ] */
-            idList: number[];
+        FolderCreateRequest: {
+            name?: string;
+        };
+        FolderResponse: {
+            /** Format: int64 */
+            id?: number;
+            name?: string;
+            /** Format: int64 */
+            parentFolderId?: number;
+            /** Format: int64 */
+            userId?: number;
+        };
+        Channel: {
+            item?: components["schemas"]["Item"][];
+        };
+        Item: {
+            title?: string;
+            link?: string;
+            guid?: string;
+            pubDate?: string;
+            description?: string;
+            creator?: string;
+            category?: string[];
+        };
+        LinkResponse: {
+            /** Format: int64 */
+            id?: number;
+            url?: string;
+            title?: string;
+            description?: string;
+            imageUrl?: string;
+        };
+        ApiErrorBody: {
+            code?: string;
+            message?: string;
+        };
+        StructureDeleteRequest: {
+            structure?: components["schemas"]["StructureServerNode"];
+        };
+        PickDeleteRequest: {
+            /** Format: int64 */
+            id?: number;
         };
     };
     responses: never;
@@ -504,7 +468,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getAllUserTag: {
+    getTagListByUser: {
         parameters: {
             query?: never;
             header?: never;
@@ -513,13 +477,38 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description 태그 리스트를 정상적으로 조회했습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.tag.dto.TagApiResponse$Read"][];
+                    "*/*": components["schemas"]["TagResponse"][];
+                };
+            };
+        };
+    };
+    updateTagList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description 태그 수정 정보 */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TagUpdateRequest"][];
+            };
+        };
+        responses: {
+            /** @description 태그 리스트를 정상적으로 수정했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["TagResponse"][];
                 };
             };
         };
@@ -531,160 +520,59 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
+        /** @description 태그 생성 정보 */
         requestBody: {
             content: {
-                "application/json": components["schemas"]["techpick.api.application.tag.dto.TagApiRequest$Create"];
+                "application/json": components["schemas"]["TagCreateRequest"];
             };
         };
         responses: {
-            /** @description 태그 추가 성공 */
+            /** @description 태그를 정상적으로 생성했습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.tag.dto.TagApiResponse$Create"];
+                    "*/*": components["schemas"]["TagResponse"];
                 };
             };
-            /** @description 중복된 태그 이름 */
+        };
+    };
+    movePick: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                pickId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StructureMoveRequest"];
+            };
+        };
+        responses: {
+            /** @description 픽을 성공적으로 이동했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-        };
-    };
-    deleteTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.tag.dto.TagApiRequest$Delete"];
-            };
-        };
-        responses: {
-            /** @description 태그 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 본인 태그만 삭제할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.tag.dto.TagApiRequest$Update"];
-            };
-        };
-        responses: {
-            /** @description 태그 수정 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 중복된 태그 이름 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 본인 태그만 수정할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getFolderChildPickList: {
-        parameters: {
-            query?: {
-                /**
-                 * @description 조회할 폴더 ID 목록
-                 * @example 1, 2, 3
-                 */
-                folderIdList?: number[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 픽 리스트 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$FolderPickList"][];
-                };
-            };
-        };
-    };
-    savePick: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.pick.dto.PickApiRequest$Create"];
-            };
-        };
-        responses: {
-            /** @description 픽 생성 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
-                };
-            };
-            /** @description 잘못된 태그 접근 */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
-                };
-            };
-            /** @description 접근할 수 없는 폴더 */
+            /** @description 접근할 수 없는 폴더입니다. */
             403: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
-                };
+                content?: never;
             };
         };
     };
@@ -692,35 +580,135 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                pickId: number;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["techpick.api.application.pick.dto.PickApiRequest$Delete"];
+                "application/json": components["schemas"]["StructureDeleteRequest"];
             };
         };
         responses: {
-            /** @description 픽 삭제 성공 */
-            204: {
+            /** @description 픽을 성공적으로 삭제했습니다. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 휴지통이 아닌 폴더에서 픽 삭제 불가 */
-            406: {
+            /** @description 휴지통에 있는 픽만 삭제 가능합니다. */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description 미확인 서버 에러 혹은 존재하지 않는 픽 삭제 */
-            500: {
+            /** @description 접근할 수 없는 폴더입니다. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    moveFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StructureMoveRequest"];
+            };
+        };
+        responses: {
+            /** @description 폴더를 성공적으로 이동했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 기본폴더는 수정/이동이 불가능합니다. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 접근할 수 없는 폴더입니다. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StructureDeleteRequest"];
+            };
+        };
+        responses: {
+            /** @description 폴더를 성공적으로 삭제했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 휴지통에 있는 폴더만 삭제 가능합니다. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 접근할 수 없는 폴더입니다. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getPickListByUser_1: {
+        parameters: {
+            query?: {
+                parentId?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 폴더 픽 리스트 조회에 성공하였습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PickResponse"][];
+                };
             };
         };
     };
@@ -733,22 +721,115 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["techpick.api.application.pick.dto.PickApiRequest$Update"];
+                "application/json": components["schemas"]["PickUpdateRequest"];
             };
         };
         responses: {
-            /** @description 픽 내용 수정 성공 */
+            /** @description 픽 수정에 성공하였습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
+                    "*/*": components["schemas"]["PickResponse"];
                 };
             };
         };
     };
-    getAllRootFolderList: {
+    createPick: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PickCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description 픽 생성에 성공하였습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PickResponse"];
+                };
+            };
+            /** @description 픽이 이미 존재합니다. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PickResponse"];
+                };
+            };
+        };
+    };
+    deletePick_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PickDeleteRequest"];
+            };
+        };
+        responses: {
+            /** @description 픽 삭제에 성공하였습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateFolderName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FolderUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description 폴더 이름은 정상적으로 변경했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 기본 폴더는 변경할 수 없습니다. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description 접근할 수 없는 폴더입니다. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getBasicFolderIdMap: {
         parameters: {
             query?: never;
             header?: never;
@@ -757,22 +838,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description 기본폴더 id를 정상적으로 조회했습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description 본인 폴더만 조회할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.folder.dto.FolderApiResponse"][];
+                    "*/*": {
+                        [key: string]: number;
+                    };
                 };
             };
         };
@@ -786,266 +860,96 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["techpick.api.application.folder.dto.FolderApiRequest$Create"];
+                "application/json": components["schemas"]["FolderCreateRequest"];
             };
         };
         responses: {
-            /** @description 폴더 추가 성공 */
+            /** @description 폴더를 정상적으로 생성했습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.folder.dto.FolderApiResponse"];
+                    "*/*": components["schemas"]["FolderResponse"];
                 };
             };
-        };
-    };
-    deleteFolder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.folder.dto.FolderApiRequest$Delete"];
-            };
-        };
-        responses: {
-            /** @description 폴더 삭제 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 기본 폴더는 삭제할 수 없습니다. */
+            /** @description 중복된 폴더 이름 입니다. */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description 본인 폴더만 삭제할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "*/*": components["schemas"]["FolderResponse"];
                 };
-                content?: never;
             };
         };
     };
-    updateFolder: {
+    getNewRss: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.folder.dto.FolderApiRequest$Update"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description 폴더 수정 성공 */
-            204: {
+            /** @description OK */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description 기본 폴더는 수정할 수 없습니다. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "*/*": components["schemas"]["Channel"][];
                 };
-                content?: never;
-            };
-            /** @description 본인 폴더만 수정할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
-    moveTag: {
+    getStructure: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.tag.dto.TagApiRequest$Move"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            /** @description 태그 이동 성공 */
-            204: {
+            /** @description 구조 json을 정상적으로 조회했습니다. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-            /** @description 본인 태그만 이동할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
+                content: {
+                    "*/*": string;
                 };
-                content?: never;
             };
         };
     };
-    movePick: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.pick.dto.PickApiRequest$Move"];
-            };
-        };
-        responses: {
-            /** @description 픽 이동 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 폴더가 존재하지 않음. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    moveFolder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["techpick.api.application.folder.dto.FolderApiRequest$Move"];
-            };
-        };
-        responses: {
-            /** @description 폴더 이동 성공 */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 기본 폴더는 이동할 수 없습니다. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 본인 폴더만 이동할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description 미분류폴더, 휴지통 폴더로 이동할 수 없습니다. */
-            406: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getPick: {
+    getPickById: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                id: number;
+                pickId: number;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 픽 상세 조회 성공 */
+            /** @description 픽 상세 정보 조회에 성공하였습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
+                    "*/*": components["schemas"]["PickResponse"];
                 };
             };
         };
     };
-    searchPick: {
-        parameters: {
-            query?: {
-                /**
-                 * @description 조회할 폴더 ID 목록
-                 * @example 1, 2, 3
-                 */
-                folderIdList?: number[];
-                /**
-                 * @description 검색 토큰 목록
-                 * @example 리액트, 쿼리, 서버
-                 */
-                searchTokenList?: string[];
-                /**
-                 * @description 검색 태그 ID 목록
-                 * @example 1, 2, 3
-                 */
-                tagIdList?: number[];
-                /**
-                 * @description 픽 시작 id 조회
-                 * @example 0
-                 */
-                cursor?: number;
-                /**
-                 * @description 한 페이지에 가져올 픽 개수
-                 * @example 20
-                 */
-                size?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 조회 성공 */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickSliceResponseTechpick.api.application.pick.dto.PickApiResponse$Pick"];
-                };
-            };
-        };
-    };
-    getPickUrl: {
+    getPickByUrl: {
         parameters: {
             query: {
-                link: string;
+                url: string;
             };
             header?: never;
             path?: never;
@@ -1053,58 +957,121 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 픽 여부 조회 성공 */
+            /** @description 픽 id 획득에 성공하였습니다. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
+                    "*/*": components["schemas"]["PickResponse"];
                 };
             };
-            /** @description 해당 링크에 대해 픽이 되어 있지 않습니다. */
+            /** @description 픽 id가 존재하지 않습니다. */
             404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.pick.dto.PickApiResponse$Pick"];
+                    "*/*": components["schemas"]["PickResponse"];
                 };
             };
         };
     };
-    getChildrenFolder: {
+    getByUrl: {
         parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: number;
+            query: {
+                /** @description 링크 URL */
+                url: string;
             };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.folder.dto.FolderApiResponse"][];
+                    "*/*": components["schemas"]["LinkResponse"];
                 };
             };
-            /** @description 본인 폴더만 조회할 수 있습니다. */
-            401: {
+            /** @description [LI-000] 존재하지 않는 링크 */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.folder.dto.FolderApiResponse"][];
+                    "*/*": components["schemas"]["ApiErrorBody"];
                 };
             };
         };
     };
-    getBasicFolderList: {
+    getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 링크 ID */
+                linkId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LinkResponse"];
+                };
+            };
+            /** @description [LI-000] 존재하지 않는 링크 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiErrorBody"];
+                };
+            };
+        };
+    };
+    deleteById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 링크 ID */
+                linkId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 성공 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description [LI-001] 링크를 픽한 사람이 존재 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ApiErrorBody"];
+                };
+            };
+        };
+    };
+    getAll: {
         parameters: {
             query?: never;
             header?: never;
@@ -1113,24 +1080,69 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description 조회 성공 */
+            /** @description 성공 */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["techpick.api.application.folder.dto.FolderApiResponse"][];
-                };
-            };
-            /** @description 본인 폴더만 조회할 수 있습니다. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["techpick.api.application.folder.dto.FolderApiResponse"][];
+                    "*/*": string;
                 };
             };
         };
     };
+    getFolderListByParentFolderId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folderId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 폴더를 정상적으로 조회했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FolderResponse"][];
+                };
+            };
+            /** @description 접근할 수 없는 폴더입니다. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["FolderResponse"][];
+                };
+            };
+        };
+    };
+    deleteTagById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tagId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 태그를 정상적으로 삭제했습니다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
 }
+type WithRequired<T, K extends keyof T> = T & {
+    [P in K]-?: T[P];
+};

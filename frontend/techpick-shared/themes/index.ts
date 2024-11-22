@@ -1,16 +1,12 @@
+export { commonTheme } from './commonTheme.css';
 export {
-  commonThemeClass,
-  commonTheme,
+  commonThemeContract,
   breakpoints,
   space,
   typography,
   fontColor,
-  borderRadius,
-  fontSize,
-  fontWeights,
-  lineHeight,
-  sizes,
-  zIndex,
-} from './commonTheme.css';
+  fontFamily,
+} from './commonThemeContract.css';
+export { colorThemeContract, color } from './colorThemeContract.css';
 export { darkTheme } from './darkTheme.css';
-export { lightTheme, colorVars } from './lightTheme.css';
+export { lightTheme } from './lightTheme.css';
