@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars, sizes } from 'techpick-shared';
+import { sizes } from 'techpick-shared';
 
 export const pageContainerLayout = style({
   display: 'flex',

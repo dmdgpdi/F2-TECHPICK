@@ -3,17 +3,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Command } from 'cmdk';
-import { FolderOpen, SearchIcon, Tag } from 'lucide-react';
-import WrappedTokenInput, {
+import {
   JS__TOKEN__DELETE_BUTTON__CLASS_NAME,
-  KEY_DOWN_HANDLER_CONFIG_OPTION,
   TokenInputRef,
 } from 'react-customize-token-input';
-import { SpecialKeyDownConfig } from 'react-customize-token-input/lib/types/specialKeyDown';
 import { SelectedTagItem } from '@/components';
 import {
-  autoCompleteLayoutStyle,
-  inputIconStyle,
   inputLayoutStyle,
   listItemStyle,
   searchWidgetLayoutStyle,
@@ -171,22 +166,22 @@ export function Search() {
     );
   };
 
-  const editTokenList = (newTokenValues: Token<SearchKey>[]) => {
-    setTokens(newTokenValues);
-  };
+  // const editTokenList = (newTokenValues: Token<SearchKey>[]) => {
+  //   setTokens(newTokenValues);
+  // };
 
-  const renderTokenLabel = (token: Token<SearchKey>) => {
-    switch (token.key) {
-      case 'FOLDER':
-        return <TokenLabel token={token} icon={<FolderOpen size={'14px'} />} />;
-      case 'TAG':
-        return <TokenLabel token={token} icon={<Tag size={'14px'} />} />;
-      case 'NONE':
-      /* fall through */
-      default:
-        return;
-    }
-  };
+  // const renderTokenLabel = (token: Token<SearchKey>) => {
+  //   switch (token.key) {
+  //     case 'FOLDER':
+  //       return <TokenLabel token={token} icon={<FolderOpen size={'14px'} />} />;
+  //     case 'TAG':
+  //       return <TokenLabel token={token} icon={<Tag size={'14px'} />} />;
+  //     case 'NONE':
+  //     /* fall through */
+  //     default:
+  //       return;
+  //   }
+  // };
 
   /**
    * @description
@@ -231,11 +226,11 @@ export function Search() {
    * react-token-input의 키 이벤트를 비활성화해야
    * 자동 토큰 생성 행위를 막을 수 있음.
    */
-  const KeyEventConfig: SpecialKeyDownConfig = {
-    onEnter: KEY_DOWN_HANDLER_CONFIG_OPTION.OFF,
-    onEscape: KEY_DOWN_HANDLER_CONFIG_OPTION.OFF,
-    onTab: KEY_DOWN_HANDLER_CONFIG_OPTION.OFF,
-  };
+  // const KeyEventConfig: SpecialKeyDownConfig = {
+  //   onEnter: KEY_DOWN_HANDLER_CONFIG_OPTION.OFF,
+  //   onEscape: KEY_DOWN_HANDLER_CONFIG_OPTION.OFF,
+  //   onTab: KEY_DOWN_HANDLER_CONFIG_OPTION.OFF,
+  // };
 
   const isUnselectedItem = (item: TagType | FolderType) => {
     return !tokens.some((token) => token.id === item.id);
@@ -262,11 +257,6 @@ export function Search() {
    * @description
    * Enter 입력 시 검색 URL로 이동
    */
-  const onCreatorKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      doSearchWithTokensAndInput();
-    }
-  };
 
   return (
     <div className={searchWidgetLayoutStyle}>

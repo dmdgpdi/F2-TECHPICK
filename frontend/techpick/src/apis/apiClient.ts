@@ -1,5 +1,4 @@
 import ky, { HTTPError } from 'ky';
-import { API_URLS } from '@/apis/apiConstants';
 import { notifyError } from '@/utils';
 import { ERROR_MESSAGE_JSON, returnErrorFromHTTPError } from './error';
 
