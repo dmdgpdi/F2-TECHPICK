@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { folderTreeHeaderTitleLayout } from '@/components/FolderTree/folderTreeHeader.css';
 import { useCreateFolderInputStore } from '@/stores/createFolderInputStore';
 import { useTreeStore } from '@/stores/dndTreeStore/dndTreeStore';
 import { FolderTreeHeader } from './FolderTreeHeader';
@@ -13,7 +14,7 @@ export function FolderTree() {
   const { newFolderParentId } = useCreateFolderInputStore();
   const { getFolders, getBasicFolders } = useTreeStore();
   const rootFolderId = useTreeStore((state) => state.rootFolderId);
-  const isShow = newFolderParentId !== rootFolderId;
+  const isCreateFolderMode = newFolderParentId !== rootFolderId;
 
   useEffect(() => {
     getFolders();
@@ -24,11 +25,14 @@ export function FolderTree() {
     <HorizontalResizableContainer>
       <div className={treeLayout}>
         <FolderTreeHeader />
-        {isShow && (
-          <ShowCreateFolderInputButton newFolderParentId={rootFolderId} />
-        )}
-
-        <TreeNode id={rootFolderId} depth={0} />
+        <div className={folderTreeHeaderTitleLayout}>
+          {/* TODO: 컴포넌트로 빼기 */}
+          <h1>폴더</h1>
+          {isCreateFolderMode && (
+            <ShowCreateFolderInputButton newFolderParentId={rootFolderId} />
+          )}
+        </div>
+        {<TreeNode id={rootFolderId} depth={0} />}
       </div>
     </HorizontalResizableContainer>
   );

@@ -115,6 +115,13 @@ export const darkTheme = createTheme(colorVars, {
   borderDisabled: '#4a4a4a', // 어두운 회색 테두리
   foregroundDisabled: '#6b6b6b', // 텍스트 포그라운드 (밝은 회색)
 
+  text: 'rgb(255, 255, 255)',
+  lightGray: '#1a1a1a', // 입력 필드 기본 배경색
+  background: '#000',
+  point: '#F4661E',
+  softPoint: '#FBC6AC',
+  heavySecondary: '#2E2E2E',
+
   ...bronzeDark,
   ...goldDark,
   ...brownDark,

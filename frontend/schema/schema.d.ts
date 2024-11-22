@@ -191,7 +191,7 @@ export interface paths {
          * 픽 리스트 검색
          * @description 해당 폴더에 내에 있는 픽 리스트 검색
          */
-        get: operations["searchPickAndRssList"];
+        get: operations["searchPick"];
         put?: never;
         post?: never;
         delete?: never;
@@ -347,6 +347,10 @@ export interface components {
             /** Format: int64 */
             parentFolderId?: number;
             childFolderIdOrderedList?: number[];
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
         "techpick.api.application.tag.dto.TagApiRequest$Update": {
             /**
@@ -382,6 +386,11 @@ export interface components {
             id: number;
             /** @example Record란 뭘까? */
             title?: string;
+            /**
+             * Format: int64
+             * @example 3
+             */
+            parentFolderId?: number;
             /** @example [
              *       4,
              *       5,
@@ -987,7 +996,7 @@ export interface operations {
             };
         };
     };
-    searchPickAndRssList: {
+    searchPick: {
         parameters: {
             query?: {
                 /**

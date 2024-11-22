@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components';
+import { Button } from '@/components/Button/Button';
 import { useDeleteTagDialogStore } from '@/stores/deleteTagDialogStore';
 import type { TagType } from '@/types';
 
@@ -17,7 +17,7 @@ export function ShowDeleteTagDialogButton({
   };
 
   return (
-    <Button onClick={showDeleteTagDialog} size="xs" background="warning" wide>
+    <Button onClick={showDeleteTagDialog} size="xs" background="danger" wide>
       삭제
     </Button>
   );

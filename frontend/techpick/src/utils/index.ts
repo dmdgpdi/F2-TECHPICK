@@ -1,5 +1,4 @@
 export { notifyError, notifySuccess } from './toast';
-export { numberToRandomColor } from './color';
 export { getClientCookie } from './getClientCookie';
 export { hasIndex } from './array';
 export { isEmptyString } from './string';
@@ -10,3 +9,7 @@ export { isFolderDraggableObject } from './isFolderDraggableObject';
 export { isPickDraggableObject } from './isPickDraggableObjectType';
 export { isPickToFolderDroppableObject } from './isPickToFolderDroppableObject';
 export { getElementById } from './getElementById';
+export { formatDateString } from './formatDateString';
+export { isShallowEqualValue } from './isShallowEqualValue';
+export { getSelectedPickRange } from './getSelectedPickRange';
+export { numberToRandomColor } from './numberToRandomColor';

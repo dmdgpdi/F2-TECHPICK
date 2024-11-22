@@ -1,4 +1,3 @@
-import { createTheme } from '@vanilla-extract/css';
 import {
   bronze,
   gold,
@@ -32,6 +31,7 @@ import {
   olive,
   sand,
 } from '@radix-ui/colors';
+import { createTheme } from '@vanilla-extract/css';
 
 export const [lightTheme, colorVars] = createTheme({
   /**
@@ -58,12 +58,16 @@ export const [lightTheme, colorVars] = createTheme({
     popoverButtonHover: '#e0e0e0',
   },
 
-  primary: '#8ab4f8',
-  secondary: '#c2c2c2',
+  primary: '#F4661E',
+  secondary: '#353535',
+  neutral: '#ECECEC',
+
+  // primary: '#8ab4f8',
+  // secondary: '#c2c2c2',
   critical: '#e53935',
   warning: '#fb8c00',
   positive: '#2e7d32',
-  neutral: '#9e9e9e',
+  // neutral: '#9e9e9e',
   disabled: '#616161',
   onMedia: '#ffffff',
   primaryFaded: 'rgba(138, 180, 248, 0.7)',
@@ -117,6 +121,13 @@ export const [lightTheme, colorVars] = createTheme({
 
   borderDisabled: '#c4c4c4', // 연한 회색 테두리
   foregroundDisabled: '#9e9e9e', // 텍스트 포그라운드 (중간 회색)
+
+  text: 'rgb(0, 0, 0)', // 라이트 모드에서는 검은색 텍스트
+  lightGray: '#f9f9f9',
+  background: '#ffffff',
+  point: '#F4661E',
+  softPoint: '#FBC6AC',
+  heavySecondary: '#2E2E2E',
 
   ...bronze,
   ...gold,
