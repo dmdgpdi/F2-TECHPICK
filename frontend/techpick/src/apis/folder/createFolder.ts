@@ -23,4 +23,3 @@ export const createFolder = async (newFolderInfo: CreateFolderRequestType) => {
     throw httpError;
   }
 };
-// chore
