@@ -9,7 +9,7 @@ export const pickRecordLayoutStyle = style({
   minHeight: '60px',
   height: 'fit-content',
   border: '1px solid black',
-  borderTop: 'none',
+  background: colorVars.gold3,
 });
 
 export const pickImageStyle = style({
@@ -25,7 +25,7 @@ export const pickEmptyImageStyle = style({
 });
 
 export const pickTitleSectionStyle = style({
-  fontSize: typography.fontSize['md'],
+  fontSize: typography.fontSize['lg'],
   fontWeight: typography.fontWeights['light'],
   height: '40px',
   lineHeight: '20px',

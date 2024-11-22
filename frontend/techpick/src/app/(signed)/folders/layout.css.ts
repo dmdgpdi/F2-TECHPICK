@@ -12,6 +12,7 @@ export const ListViewerLayout = style({
   height: '100vh',
   flexShrink: 1,
   minWidth: 0,
+  position: 'relative',
 
   '@media': {
     'screen and (min-width: 1440px)': {
@@ -23,6 +24,7 @@ export const ListViewerLayout = style({
 export const ListViewerHeaderLayout = style({
   display: 'flex',
   flexDirection: 'column',
+  maxWidth: '1116px',
   borderBottom: `2px solid ${colorVars.neutral}`,
 });
 
@@ -39,3 +41,9 @@ export const ListViewerHeaderMainLayout = style({
 
 // indicator module layout (title + location)
 export const ListViewerHeaderBodyLayout = style({});
+
+export const qnaSection = style({
+  position: 'absolute',
+  bottom: '32px',
+  right: '32px',
+});

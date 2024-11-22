@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ExternalLink as ExternalLinkIcon } from 'lucide-react';
 import { useOpenUrlInNewTab } from '@/hooks';
-import { usePickStore, useTagStore, useUpdatePickStore } from '@/stores';
+import { usePickStore, useTagStore } from '@/stores';
 import { formatDateString } from '@/utils';
 import { PickDateColumnLayout } from './PickDateColumnLayout';
 import { PickImageColumnLayout } from './PickImageColumnLayout';
@@ -16,27 +16,20 @@ import {
   dateTextStyle,
   externalLinkIconStyle,
   linkLayoutStyle,
-} from './pickRecord.css';
-import { PickRecordTitleInput } from './PickRecordTitleInput';
+} from './pickSearchRecord.css';
 import { PickTagColumnLayout } from './PickTagColumnLayout';
 import { PickTitleColumnLayout } from './PickTitleColumnLayout';
 import { Separator } from './Separator';
-import { TagPicker } from '../TagPicker';
+import { SelectedTagItem } from '../SelectedTagItem';
+import { SelectedTagListLayout } from '../SelectedTagListLayout/SelectedTagListLayout';
 import { PickViewItemComponentProps, TagType } from '@/types';
 
-export function PickRecord({ pickInfo }: PickViewItemComponentProps) {
+export function PickSearchRecord({ pickInfo }: PickViewItemComponentProps) {
   const pick = pickInfo;
   const link = pickInfo.linkInfo;
   const { findTagById } = useTagStore();
-  const { updatePickInfo } = usePickStore();
   const { openUrlInNewTab } = useOpenUrlInNewTab(link.url);
-  const {
-    currentUpdatePickId,
-    setCurrentPickIdToNull,
-    setCurrentUpdatePickId,
-  } = useUpdatePickStore();
   const [isHovered, setIsHovered] = useState(false);
-  const isUpdateTitle = currentUpdatePickId === pickInfo.id;
   const { isDragging } = usePickStore();
 
   const filteredSelectedTagList: TagType[] = [];
@@ -72,41 +65,25 @@ export function PickRecord({ pickInfo }: PickViewItemComponentProps) {
       <Separator />
 
       <PickTitleColumnLayout>
-        {isUpdateTitle ? (
-          <PickRecordTitleInput
-            initialValue={pick.title}
-            onSubmit={(newTitle) => {
-              updatePickInfo(pick.parentFolderId, {
-                ...pickInfo,
-                title: newTitle,
-              });
-              setCurrentPickIdToNull();
-            }}
-            onClickOutSide={() => {
-              setCurrentPickIdToNull();
-            }}
-          />
-        ) : (
-          <div
-            className={pickTitleSectionStyle}
-            onClick={(event) => {
-              setCurrentUpdatePickId(pickInfo.id);
-              event.stopPropagation();
-            }}
-            role="button"
-          >
-            {pick.title}
-          </div>
-        )}
+        <div
+          className={pickTitleSectionStyle}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+          role="button"
+        >
+          {pick.title}
+        </div>
       </PickTitleColumnLayout>
 
       <Separator />
 
       <PickTagColumnLayout>
-        <TagPicker
-          pickInfo={pickInfo}
-          selectedTagList={filteredSelectedTagList}
-        />
+        <SelectedTagListLayout>
+          {filteredSelectedTagList.map((tag) => (
+            <SelectedTagItem key={tag.name} tag={tag} />
+          ))}
+        </SelectedTagListLayout>
       </PickTagColumnLayout>
 
       <Separator />

@@ -118,7 +118,9 @@ export function Search() {
         return;
       }
       const lastWordToken = inputTokenizer.tokenize(input).getLastToken();
-      lastWordToken && setTokenInputContext(lastWordToken);
+      if (lastWordToken) {
+        setTokenInputContext(lastWordToken);
+      }
     },
     [input, inputTokenizer]
   );

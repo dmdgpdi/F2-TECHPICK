@@ -25,10 +25,11 @@ export const commandInputStyle = style({
 });
 
 export const tagListStyle = style({
+  minWidth: '288px',
   maxHeight: '150px',
   border: `1px solid black`,
-
   overflowY: 'auto',
+
   '::-webkit-scrollbar': {
     display: 'none',
   },
@@ -53,7 +54,7 @@ export const tagListItemStyle = style({
   // 선택된 상태일 때
   selectors: {
     '&[data-selected="true"]': {
-      backgroundColor: colorVars.softPoint,
+      backgroundColor: colorVars.gold4,
     },
     '&[data-disabled="true"]': {
       display: 'none',

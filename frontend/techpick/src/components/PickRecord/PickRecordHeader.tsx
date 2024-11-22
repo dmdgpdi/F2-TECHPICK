@@ -1,7 +1,5 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { isCurrentPathRootOrGeneral } from '@/utils/isCurrentPathRootOrGeneral';
 import { PickDateColumnLayout } from './PickDateColumnLayout';
 import { PickImageColumnLayout } from './PickImageColumnLayout';
 import { pickRecordHeaderLayoutStyle } from './pickRecordHeader.css';
@@ -10,29 +8,27 @@ import { PickTitleColumnLayout } from './PickTitleColumnLayout';
 import { Separator } from './Separator';
 
 export function PickRecordHeader() {
-  return !isCurrentPathRootOrGeneral(usePathname()) ? (
-    <>{/* do not show record header */} </>
-  ) : (
+  return (
     <div className={pickRecordHeaderLayoutStyle}>
       <PickImageColumnLayout>
-        <div style={{ width: '48px' }}>Image</div>
+        <div style={{ lineHeight: '22px' }}>Image</div>
       </PickImageColumnLayout>
 
       <Separator />
 
       <PickTitleColumnLayout>
-        <div style={{ width: '520px' }}>Title</div>
+        <div style={{ lineHeight: '22px' }}>Title</div>
       </PickTitleColumnLayout>
 
       <Separator />
       <PickTagColumnLayout>
-        <div style={{ width: '320px' }}>Tags</div>
+        <div style={{ lineHeight: '22px' }}>Tags</div>
       </PickTagColumnLayout>
 
       <Separator />
 
       <PickDateColumnLayout>
-        <div>date</div>
+        <div style={{ lineHeight: '22px' }}>date</div>
       </PickDateColumnLayout>
     </div>
   );
