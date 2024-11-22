@@ -17,4 +17,3 @@ export const deleteTag = async (deleteTagInfo: DeleteTagRequestType) => {
     throw httpError;
   }
 };
-// chore
