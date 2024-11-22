@@ -17,7 +17,6 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/ui/Breadcrumb/Breadcrumb';
-import { Text } from '@/ui/Text/Text';
 import { FolderType } from '@/types';
 
 /**
@@ -88,9 +87,17 @@ export function CurrentPathIndicator() {
             <div className={indicatorBodyLayoutStyle}>
               <div className={indicatorTitleStyle}>
                 <FolderOpenIcon size={28} />
-                <Text size={'4xl'} weight={'regular'}>
+                {/*<Text  size={'4xl'} weight={'regular'}>*/}
+                <h1
+                  style={{
+                    fontWeight: '500',
+                    fontSize: '36px',
+                    paddingBottom: '8px',
+                  }}
+                >
                   {currentFolder?.name}
-                </Text>
+                </h1>
+                {/*</Text>*/}
               </div>
               <PathIndicator
                 folderListFromParentToChild={getFullFolderPathFromLeaf(
@@ -114,11 +121,7 @@ export function PathIndicator(props: PathIndicatorProps) {
   const getFolderLinkByType = (folder: FolderType) => {
     switch (folder.folderType) {
       case 'ROOT':
-        return (
-          <BreadcrumbLink href={`${ROUTES.FOLDERS_ROOT}`}>
-            {'내 컬렉션'}
-          </BreadcrumbLink>
-        );
+        return <BreadcrumbItem>{'내 폴더'}</BreadcrumbItem>;
       case 'UNCLASSIFIED':
         return (
           <BreadcrumbLink href={`${ROUTES.FOLDERS_UNCLASSIFIED}`}>

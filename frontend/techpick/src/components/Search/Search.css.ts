@@ -20,8 +20,11 @@ export const listItemStyle = style({
 });
 
 export const searchWidgetLayoutStyle = style({
+  border: `1px solid ${colorVars.gray8}`,
+  borderRadius: '4px',
+  backgroundColor: colorVars.white,
   position: 'relative',
-  width: '300px',
+  width: '100%',
 });
 
 export const inputLayoutStyle = style({
@@ -44,8 +47,8 @@ export const inputIconStyle = style({
 });
 
 export const autoCompleteLayoutStyle = style({
-  position: 'absolute',
-  backgroundColor: colorVars.gray4,
-  width: '100%',
-  zIndex: 1,
+  // position: 'absolute',
+  // backgroundColor: colorVars.gray4,
+  // width: '100%',
+  // zIndex: 1,
 });

@@ -7,6 +7,9 @@ import {
 } from '@/hooks';
 import { useTreeStore } from '@/stores';
 
+/**
+ * Root 폴더가 Home의 역할을 합니다.
+ */
 export default function RootFolderPage() {
   const selectSingleFolder = useTreeStore((state) => state.selectSingleFolder);
   const basicFolderMap = useTreeStore((state) => state.basicFolderMap);

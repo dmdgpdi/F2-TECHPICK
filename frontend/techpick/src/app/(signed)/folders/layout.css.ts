@@ -25,7 +25,6 @@ export const ListViewerHeaderLayout = style({
   display: 'flex',
   flexDirection: 'column',
   maxWidth: '1116px',
-  borderBottom: `2px solid ${colorVars.neutral}`,
 });
 
 // search module + add button
@@ -34,7 +33,7 @@ export const ListViewerHeaderMainLayout = style({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  alignItems: 'center',
+  // alignItems: 'center',
   justifyContent: 'space-between',
   transition: '0.3s ease',
 });

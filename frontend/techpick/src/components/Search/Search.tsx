@@ -271,27 +271,27 @@ export function Search() {
   return (
     <div className={searchWidgetLayoutStyle}>
       <div className={inputLayoutStyle}>
-        <SearchIcon className={inputIconStyle} />
-        <WrappedTokenInput
-          ref={inputRef}
-          disableCreateOnBlur
-          tokenValues={tokens}
-          onInputValueChange={setInput}
-          specialKeyDown={KeyEventConfig}
-          onGetIsTokenEditable={() => false}
-          onCreatorKeyDown={onCreatorKeyDown}
-          onTokenValuesChange={editTokenList}
-          onGetTokenDisplayLabel={renderTokenLabel}
-        />
-      </div>
-      <div className={autoCompleteLayoutStyle}>
+        {/*<SearchIcon className={inputIconStyle} />*/}
+        {/*<WrappedTokenInput*/}
+        {/*  ref={inputRef}*/}
+        {/*  disableCreateOnBlur*/}
+        {/*  tokenValues={tokens}*/}
+        {/*  onInputValueChange={setInput}*/}
+        {/*  specialKeyDown={KeyEventConfig}*/}
+        {/*  onGetIsTokenEditable={() => false}*/}
+        {/*  onCreatorKeyDown={onCreatorKeyDown}*/}
+        {/*  onTokenValuesChange={editTokenList}*/}
+        {/*  onGetTokenDisplayLabel={renderTokenLabel}*/}
+        {/*/>*/}
+        {/*</div>*/}
+        {/*<div className={autoCompleteLayoutStyle}>*/}
         <Command
           label={'Search'}
           style={{ width: searchWidgetWidth }}
           filter={distinguishCommandItemWithSameValue}
         >
           <Command.Input // just for auto-completion, hidden from screen
-            style={{ display: 'none' }}
+            // style={{ display: 'none' }}
             value={tokenInputContext?.text}
           />
           <Command.List>

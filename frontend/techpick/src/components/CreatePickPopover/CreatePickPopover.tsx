@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { PlusIcon } from 'lucide-react';
+import { fetchPickByUrl, getLinkOgData } from '@/apis/pick/getPick/getPick';
 import { Button } from '@/components/Button/Button';
 import { CreatePickForm } from '@/components/CreatePickForm/CreatePickForm';
 import {
@@ -12,22 +13,19 @@ import {
 import { useTreeStore } from '@/stores';
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/Popover/Popover';
 import { Text } from '@/ui/Text/Text';
-
-interface OgData {
-  url: string;
-  imageLink: string;
-  title: string;
-  description: string;
-}
+import { notifyError } from '@/utils';
+import { GetLinkOgTagDataResponseType } from '@/types';
 
 export function CreatePickPopover() {
   const urlInputRef = useRef<HTMLInputElement>(null);
-  const [isCreated, setIsCreated] = useState<boolean>(false);
+  const [isCreateMode, setIsCreateMode] = useState<boolean>(false);
 
   // -------------------------------------------------------
-  const [ogData, setOgData] = useState<OgData>({
+  const [ogData, setOgData] = useState<
+    GetLinkOgTagDataResponseType & { url: string }
+  >({
     url: '',
-    imageLink: '',
+    imageUrl: '',
     title: '',
     description: '',
   });
@@ -38,16 +36,16 @@ export function CreatePickPopover() {
   const handleSubmit = () => {
     const urlValue = urlInputRef.current?.value;
     if (!urlValue) return;
-    // TODO: (1) check if pick already exists with given url
-    //
-    // TODO: (2) send url analyze request (og-tag)
-    //
-    // TODO: (3) set OgData state
-    setOgData((prev) => ({
-      ...prev,
-      url: urlValue,
-    }));
-    setIsCreated(true);
+    (async () => {
+      const pick = await fetchPickByUrl(urlValue);
+      if (pick) {
+        notifyError('이미 픽이 존재합니다.');
+        return;
+      }
+      const ogData = await getLinkOgData(urlValue);
+      setOgData({ ...ogData, url: urlValue });
+      setIsCreateMode(true);
+    })(/*IIFE*/);
   };
 
   return (
@@ -59,13 +57,13 @@ export function CreatePickPopover() {
       </PopoverTrigger>
       <PopoverContent
         onCloseAutoFocus={() => {
-          setIsCreated(false);
+          setIsCreateMode(false);
         }}
         sideOffset={20}
         align={'end'}
       >
         <div className={popoverContentStyle}>
-          {!isCreated ? (
+          {!isCreateMode ? (
             <>
               <Text size={'lg'} weight={'light'}>
                 새로운 Pick 생성
@@ -93,9 +91,11 @@ export function CreatePickPopover() {
             <CreatePickForm
               title={ogData.title}
               url={ogData.url}
-              imageUrl={ogData.imageLink}
+              imageUrl={ogData.imageUrl}
               description={ogData.description}
-              folderInfoList={getFolderList()}
+              folderInfoList={getFolderList().filter(
+                (folder) => folder.folderType === 'GENERAL'
+              )}
             />
           )}
         </div>

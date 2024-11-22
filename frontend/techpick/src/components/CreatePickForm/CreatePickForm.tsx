@@ -17,6 +17,15 @@ import { FolderSelect } from './FolderSelect';
 import { TagPicker } from './TagPicker';
 import { FolderType, TagType } from '@/types';
 
+interface CreatePickFormProps {
+  imageUrl: string;
+  title: string;
+  url: string;
+  description: string;
+  folderInfoList: FolderType[];
+  onCreate?: () => void;
+}
+
 /**
  * @description
  *   익스텐션의 CreatePickForm과 동일한 코드입니다.
@@ -28,6 +37,7 @@ export function CreatePickForm({
   imageUrl,
   description,
   folderInfoList,
+  onCreate,
 }: CreatePickFormProps) {
   const titleInputRef = useRef<HTMLInputElement>(null);
   const tagPickerRef = useRef<HTMLDivElement>(null);
@@ -57,6 +67,7 @@ export function CreatePickForm({
       setTimeout(() => {
         window.close();
       }, 900);
+      onCreate && onCreate();
     });
   };
 

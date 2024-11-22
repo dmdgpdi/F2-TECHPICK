@@ -48,6 +48,16 @@ export type CreatePickRequestType = ConcreteType<
   components['schemas']['techpick.api.application.pick.dto.PickApiRequest$Create']
 >;
 
+export type GetPickByUrlResponseType = ConcreteType<
+  components['schemas']['techpick.api.application.pick.dto.PickApiResponse$Pick']
+>;
+
+export type GetLinkOgTagDataResponseType = {
+  title: string;
+  description: string;
+  imageUrl: string;
+};
+
 export type CreatePickResponseType = ConcreteType<
   components['schemas']['techpick.api.application.pick.dto.PickApiResponse$Pick']
 >;
