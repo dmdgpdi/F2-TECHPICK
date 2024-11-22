@@ -4,12 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(
-	scanBasePackages = {"techpick.api", "techpick.core", "techpick.security"}
+	scanBasePackages = {"techpick.batch", "techpick.core"}
 )
-
-
-public class TechPickApiApplication {
+public class TechPickBatchApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(TechPickApiApplication.class, args);
+		SpringApplication.run(TechPickBatchApplication.class, args);
 	}
 }
