@@ -1,20 +1,15 @@
-import { HTTPError } from 'ky';
 import { apiClient } from '../apiClient';
 import { API_URLS } from '../apiConstants';
-import { returnErrorFromHTTPError } from '../error';
-import { UpdateTagRequestType } from '@/types';
+import { UpdateTagRequestType, UpdateTagResponseType } from '@/types';
 
 export const updateTag = async (updateTag: UpdateTagRequestType) => {
-  try {
-    await apiClient.patch(API_URLS.UPDATE_TAGS, {
-      json: updateTag,
-    });
-  } catch (httpError) {
-    if (httpError instanceof HTTPError) {
-      const error = await returnErrorFromHTTPError(httpError);
-
-      throw error;
+  const response = await apiClient.put<UpdateTagResponseType>(
+    API_URLS.UPDATE_TAGS,
+    {
+      json: [updateTag],
     }
-    throw httpError;
-  }
+  );
+  const updatedTag = await response.json();
+
+  return updatedTag;
 };
