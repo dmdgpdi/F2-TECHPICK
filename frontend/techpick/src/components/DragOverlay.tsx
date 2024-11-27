@@ -3,11 +3,8 @@
 import { DragOverlay as DndKitDragOverlay } from '@dnd-kit/core';
 import { useGetDragOverStyle } from '@/hooks';
 import { usePickStore, useTreeStore } from '@/stores';
-import {
-  dragCountStyle,
-  pickDragOverlayStyle,
-  stackedOverlayStyle,
-} from './dragOverlay.css';
+import { dragCountStyle, stackedOverlayStyle } from './dragOverlay.css';
+import { FolderItemOverlay } from './FolderTree/FolderItemOverlay';
 import { PickDragOverlayShadowList } from './PickDragOverlayShadowList';
 import { PickRecordOverlay } from './PickRecord/PickRecordOverlay';
 
@@ -18,12 +15,18 @@ export function DargOverlay({ elementClickPosition }: DargOverlayProps) {
     draggingPickInfo,
     selectedPickIdList,
   } = usePickStore();
-  const { overlayStyle } = useGetDragOverStyle({ elementClickPosition });
+  const { overlayStyle: pickOverlayStyle } = useGetDragOverStyle({
+    elementClickPosition,
+  });
+  const { overlayStyle: folderOverlayStyle } = useGetDragOverStyle({
+    elementClickPosition,
+    scale: 1,
+  });
   const selectedPickListCount = selectedPickIdList.length - 1;
 
   if (isPickDragging && draggingPickInfo) {
     return (
-      <DndKitDragOverlay style={overlayStyle}>
+      <DndKitDragOverlay style={pickOverlayStyle}>
         <div className={stackedOverlayStyle}>
           <PickRecordOverlay pickInfo={draggingPickInfo} />
           {0 < selectedPickListCount && (
@@ -39,10 +42,8 @@ export function DargOverlay({ elementClickPosition }: DargOverlayProps) {
 
   if (isFolderDragging && draggingFolderInfo) {
     return (
-      <DndKitDragOverlay style={overlayStyle}>
-        <div className={`${pickDragOverlayStyle}`}>
-          {draggingFolderInfo.name}
-        </div>
+      <DndKitDragOverlay style={folderOverlayStyle}>
+        <FolderItemOverlay name={draggingFolderInfo.name} />
       </DndKitDragOverlay>
     );
   }

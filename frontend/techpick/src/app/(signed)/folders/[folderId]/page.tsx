@@ -2,9 +2,11 @@
 
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { DraggablePickListViewer, PickRecordHeader } from '@/components';
+import { PickRecordHeader } from '@/components';
+import { EmptyPickRecordImage } from '@/components/EmptyPickRecordImage';
+import { FolderContentHeader } from '@/components/FolderContentHeader/FolderContentHeader';
+import { FolderContentLayout } from '@/components/FolderContentLayout';
 import { PickContentLayout } from '@/components/PickContentLayout';
-import { PickContextMenu } from '@/components/PickContextMenu';
 import { PickDraggableListLayout } from '@/components/PickDraggableListLayout';
 import { PickDraggableRecord } from '@/components/PickRecord/PickDraggableRecord';
 import { ROUTES } from '@/constants';
@@ -66,29 +68,24 @@ export default function FolderDetailPage() {
   const pickList = getOrderedPickListByFolderId(folderId);
 
   return (
-    <PickContentLayout>
-      <PickRecordHeader />
-      <PickDraggableListLayout folderId={folderId} viewType="record">
-        {pickList.map((pickInfo) => {
-          return (
-            <PickContextMenu
-              basicFolderMap={basicFolderMap}
-              pickInfo={pickInfo}
-              key={pickInfo.id}
-              data-pick-draggable={true}
-            >
-              <PickDraggableRecord key={pickInfo.id} pickInfo={pickInfo} />
-            </PickContextMenu>
-          );
-        })}
-      </PickDraggableListLayout>
-    </PickContentLayout>
-  );
-
-  return (
-    <DraggablePickListViewer
-      pickList={getOrderedPickListByFolderId(folderId)}
-      folderId={folderId}
-    />
+    <FolderContentLayout>
+      <FolderContentHeader />
+      <PickContentLayout>
+        <PickRecordHeader />
+        {pickList.length === 0 ? (
+          <EmptyPickRecordImage />
+        ) : (
+          <>
+            <PickDraggableListLayout folderId={folderId} viewType="record">
+              {pickList.map((pickInfo) => {
+                return (
+                  <PickDraggableRecord key={pickInfo.id} pickInfo={pickInfo} />
+                );
+              })}
+            </PickDraggableListLayout>
+          </>
+        )}
+      </PickContentLayout>
+    </FolderContentLayout>
   );
 }
