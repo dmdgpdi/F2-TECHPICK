@@ -5,21 +5,26 @@ import { PickRecordHeader } from '@/components';
 import { EmptyPickRecordImage } from '@/components/EmptyPickRecordImage';
 import { FolderContentHeader } from '@/components/FolderContentHeader/FolderContentHeader';
 import { FolderContentLayout } from '@/components/FolderContentLayout';
+import { FolderLoadingPage } from '@/components/FolderLoadingPage';
 import { PickContentLayout } from '@/components/PickContentLayout';
 import { PickDraggableListLayout } from '@/components/PickDraggableListLayout';
 import { PickDraggableRecord } from '@/components/PickRecord/PickDraggableRecord';
 import {
   useClearSelectedPickIdsOnMount,
+  useFetchPickRecordByFolderId,
   useFetchTagList,
   useResetPickFocusOnOutsideClick,
 } from '@/hooks';
-import { usePickStore, useTreeStore } from '@/stores';
+import { useTreeStore } from '@/stores';
+import { getOrderedPickListByFolderId } from '@/utils';
 
 export default function RecycleBinFolderPage() {
-  const { fetchPickDataByFolderId, getOrderedPickListByFolderId } =
-    usePickStore();
   const selectSingleFolder = useTreeStore((state) => state.selectSingleFolder);
   const basicFolderMap = useTreeStore((state) => state.basicFolderMap);
+  const { isLoading, data } = useFetchPickRecordByFolderId({
+    folderId: basicFolderMap?.RECYCLE_BIN.id,
+    alwaysFetch: true,
+  });
   useResetPickFocusOnOutsideClick();
   useClearSelectedPickIdsOnMount();
   useFetchTagList();
@@ -35,24 +40,11 @@ export default function RecycleBinFolderPage() {
     [basicFolderMap, selectSingleFolder]
   );
 
-  useEffect(
-    function loadPickDataFromRemote() {
-      if (!basicFolderMap) {
-        return;
-      }
-
-      fetchPickDataByFolderId(basicFolderMap['RECYCLE_BIN'].id);
-    },
-    [basicFolderMap, fetchPickDataByFolderId]
-  );
-
-  if (!basicFolderMap) {
-    return <div>loading...</div>;
+  if (!basicFolderMap || (isLoading && !data)) {
+    return <FolderLoadingPage />;
   }
 
-  const pickList = getOrderedPickListByFolderId(
-    basicFolderMap['RECYCLE_BIN'].id
-  );
+  const pickList = getOrderedPickListByFolderId(data);
 
   return (
     <FolderContentLayout>

@@ -5,6 +5,7 @@ import { PickRecordHeader } from '@/components';
 import { EmptyPickRecordImage } from '@/components/EmptyPickRecordImage';
 import { FolderContentHeader } from '@/components/FolderContentHeader/FolderContentHeader';
 import { FolderContentLayout } from '@/components/FolderContentLayout';
+import { FolderLoadingPage } from '@/components/FolderLoadingPage';
 import { PickContentLayout } from '@/components/PickContentLayout';
 import { PickDraggableListLayout } from '@/components/PickDraggableListLayout';
 import { PickDraggableRecord } from '@/components/PickRecord/PickDraggableRecord';
@@ -12,15 +13,18 @@ import {
   useClearSelectedPickIdsOnMount,
   useFetchTagList,
   useResetPickFocusOnOutsideClick,
+  useFetchPickRecordByFolderId,
 } from '@/hooks';
 import { useTreeStore } from '@/stores/dndTreeStore/dndTreeStore';
-import { usePickStore } from '@/stores/pickStore/pickStore';
+import { getOrderedPickListByFolderId } from '@/utils';
 
 export default function UnclassifiedFolderPage() {
-  const { fetchPickDataByFolderId, getOrderedPickListByFolderId } =
-    usePickStore();
   const selectSingleFolder = useTreeStore((state) => state.selectSingleFolder);
   const basicFolderMap = useTreeStore((state) => state.basicFolderMap);
+  const { isLoading, data } = useFetchPickRecordByFolderId({
+    folderId: basicFolderMap?.UNCLASSIFIED.id,
+    alwaysFetch: true,
+  });
   useResetPickFocusOnOutsideClick();
   useClearSelectedPickIdsOnMount();
   useFetchTagList();
@@ -36,24 +40,11 @@ export default function UnclassifiedFolderPage() {
     [basicFolderMap, selectSingleFolder]
   );
 
-  useEffect(
-    function loadPickDataFromRemote() {
-      if (!basicFolderMap) {
-        return;
-      }
-
-      fetchPickDataByFolderId(basicFolderMap['UNCLASSIFIED'].id);
-    },
-    [basicFolderMap, fetchPickDataByFolderId]
-  );
-
-  if (!basicFolderMap) {
-    return <div>loading...</div>;
+  if (!basicFolderMap || (isLoading && !data)) {
+    return <FolderLoadingPage />;
   }
 
-  const pickList = getOrderedPickListByFolderId(
-    basicFolderMap['UNCLASSIFIED'].id
-  );
+  const pickList = getOrderedPickListByFolderId(data);
 
   return (
     <FolderContentLayout>
