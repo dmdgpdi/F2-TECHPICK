@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import type { MouseEvent } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
 import { FolderClosedIcon, FolderOpenIcon } from 'lucide-react';
 import { shareFolder } from '@/apis/folder/shareFolder';
 import { ROUTES } from '@/constants';
+import { useDisclosure } from '@/hooks';
 import { useShareDialogOpen } from '@/hooks/useShareDialogOpen';
 import { useTreeStore } from '@/stores/dndTreeStore/dndTreeStore';
 import { isSelectionActive } from '@/utils';
 import { FolderContextMenu } from './FolderContextMenu';
+import { FolderDraggable } from './FolderDraggable';
 import { FolderInput } from './FolderInput';
 import { FolderLinkItem } from './FolderLinkItem';
 import {
@@ -35,6 +36,11 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const isSelected = selectedFolderList.includes(id);
   const isHover = id === hoverFolderId;
+  const {
+    isOpen: isOpenRemoveDialog,
+    onOpen: onOpenRemoveDialog,
+    onClose: onCloseRemoveDialog,
+  } = useDisclosure();
 
   const handleShiftSelect = (id: number, treeDataMap: FolderMapType) => {
     if (!focusFolderId || !isSameParentFolder(id, focusFolderId, treeDataMap)) {
@@ -82,7 +88,7 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
   }
 
   return (
-    <Dialog.Root>
+    <>
       <FolderContextMenu
         showRenameInput={() => {
           setIsUpdate(true);
@@ -91,21 +97,28 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
         onShow={() => {
           selectSingleFolder(id);
         }}
+        onClickRemoveFolder={onOpenRemoveDialog}
       >
-        <FolderLinkItem
-          href={ROUTES.FOLDER_DETAIL(id)}
-          isSelected={isSelected}
-          isHovered={isHover}
-          icon={isSelected ? FolderOpenIcon : FolderClosedIcon}
-          name={name}
-          onClick={(event) => handleClick(id, event)}
-        />
+        <FolderDraggable id={id}>
+          <FolderLinkItem
+            href={ROUTES.FOLDER_DETAIL(id)}
+            isSelected={isSelected}
+            isHovered={isHover}
+            icon={isSelected ? FolderOpenIcon : FolderClosedIcon}
+            name={name}
+            onClick={(event) => handleClick(id, event)}
+          />
+        </FolderDraggable>
       </FolderContextMenu>
       {isDialogOpen && (
         <ShareFolderDialog onClose={handleDialogClose} uuid={uuid} />
       )}
-      <MoveFolderToRecycleBinDialog deleteFolderId={id} />
-    </Dialog.Root>
+      <MoveFolderToRecycleBinDialog
+        deleteFolderId={id}
+        isOpen={isOpenRemoveDialog}
+        onOpenChange={onCloseRemoveDialog}
+      />
+    </>
   );
 };
 
