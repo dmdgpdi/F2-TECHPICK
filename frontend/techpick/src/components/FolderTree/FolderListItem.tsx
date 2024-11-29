@@ -4,7 +4,9 @@ import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { FolderClosedIcon, FolderOpenIcon } from 'lucide-react';
+import { shareFolder } from '@/apis/folder/shareFolder';
 import { ROUTES } from '@/constants';
+import { useShareDialogOpen } from '@/hooks/useShareDialogOpen';
 import { useTreeStore } from '@/stores/dndTreeStore/dndTreeStore';
 import { isSelectionActive } from '@/utils';
 import { FolderContextMenu } from './FolderContextMenu';
@@ -15,6 +17,7 @@ import {
   isSameParentFolder,
 } from './folderListItem.util';
 import { MoveFolderToRecycleBinDialog } from './MoveFolderToRecycleBinDialog';
+import ShareFolderDialog from './ShareFolderDialog';
 import type { FolderMapType } from '@/types';
 
 export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
@@ -27,6 +30,8 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
     updateFolderName,
     selectSingleFolder,
   } = useTreeStore();
+  const { isDialogOpen, uuid, handleDialogOpen, handleDialogClose } =
+    useShareDialogOpen();
   const [isUpdate, setIsUpdate] = useState(false);
   const isSelected = selectedFolderList.includes(id);
   const isHover = id === hoverFolderId;
@@ -56,6 +61,14 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
     setIsUpdate(false);
   };
 
+  const handleShareFolder = async () => {
+    const response = await shareFolder({
+      name,
+      folderIdList: [id],
+    });
+    handleDialogOpen(response.uuid);
+  };
+
   if (isUpdate) {
     return (
       <FolderInput
@@ -74,6 +87,7 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
         showRenameInput={() => {
           setIsUpdate(true);
         }}
+        shareFolder={handleShareFolder}
         onShow={() => {
           selectSingleFolder(id);
         }}
@@ -87,6 +101,9 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
           onClick={(event) => handleClick(id, event)}
         />
       </FolderContextMenu>
+      {isDialogOpen && (
+        <ShareFolderDialog onClose={handleDialogClose} uuid={uuid} />
+      )}
       <MoveFolderToRecycleBinDialog deleteFolderId={id} />
     </Dialog.Root>
   );

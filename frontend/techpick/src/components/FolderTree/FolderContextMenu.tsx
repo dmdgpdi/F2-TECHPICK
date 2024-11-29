@@ -3,7 +3,7 @@
 import type { PropsWithChildren } from 'react';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import * as Dialog from '@radix-ui/react-dialog';
-import { FolderPen, FolderX } from 'lucide-react';
+import { FolderPen, FolderX, ScreenShare } from 'lucide-react';
 import { getPortalContainer } from '@/utils';
 import {
   contextMenuContentLayout,
@@ -12,6 +12,7 @@ import {
 
 export function FolderContextMenu({
   showRenameInput,
+  shareFolder,
   onShow = () => {},
   children,
 }: PropsWithChildren<FolderContextMenuProps>) {
@@ -37,13 +38,19 @@ export function FolderContextMenu({
             <FolderPen />
             <p>폴더명 변경</p>
           </ContextMenu.Item>
-
           <Dialog.Trigger asChild>
             <ContextMenu.Item className={contextMenuItemStyle}>
               <FolderX />
               <p>휴지통으로 이동</p>
             </ContextMenu.Item>
           </Dialog.Trigger>
+          <ContextMenu.Item
+            className={contextMenuItemStyle}
+            onSelect={shareFolder}
+          >
+            <ScreenShare />
+            <p>공유하기</p>
+          </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu.Portal>
     </ContextMenu.Root>
@@ -52,5 +59,6 @@ export function FolderContextMenu({
 
 interface FolderContextMenuProps {
   showRenameInput: () => void;
+  shareFolder: () => void;
   onShow?: () => void;
 }
