@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import type { MouseEvent } from 'react';
-import { FolderClosedIcon, FolderOpenIcon } from 'lucide-react';
-import { shareFolder } from '@/apis/folder/shareFolder';
+import { FolderClosedIcon, FolderOpenIcon, FolderUp } from 'lucide-react';
 import { ROUTES } from '@/constants';
 import { useDisclosure } from '@/hooks';
-import { useShareDialogOpen } from '@/hooks/useShareDialogOpen';
+import useHandleRequestShareFolder from '@/hooks/useHandleRequestShareFolder';
 import { useTreeStore } from '@/stores/dndTreeStore/dndTreeStore';
 import { isSelectionActive } from '@/utils';
 import { FolderContextMenu } from './FolderContextMenu';
@@ -31,8 +30,7 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
     updateFolderName,
     selectSingleFolder,
   } = useTreeStore();
-  const { isDialogOpen, uuid, handleDialogOpen, handleDialogClose } =
-    useShareDialogOpen();
+
   const [isUpdate, setIsUpdate] = useState(false);
   const isSelected = selectedFolderList.includes(id);
   const isHover = id === hoverFolderId;
@@ -41,6 +39,20 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
     onOpen: onOpenRemoveDialog,
     onClose: onCloseRemoveDialog,
   } = useDisclosure();
+  const {
+    uuid,
+    isShareFolder,
+    isOpenShareDialog,
+    onCloseShareDialog,
+    handleOpenShareDialog,
+  } = useHandleRequestShareFolder(id);
+
+  let folderIcon = FolderClosedIcon;
+  if (isSelected && !isShareFolder) {
+    folderIcon = FolderOpenIcon;
+  } else if (isShareFolder) {
+    folderIcon = FolderUp;
+  }
 
   const handleShiftSelect = (id: number, treeDataMap: FolderMapType) => {
     if (!focusFolderId || !isSameParentFolder(id, focusFolderId, treeDataMap)) {
@@ -67,15 +79,6 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
     setIsUpdate(false);
   };
 
-  const handleShareFolder = async () => {
-    try {
-      const response = await shareFolder(id);
-      handleDialogOpen(response.folderAccessToken);
-    } catch {
-      /* empty */
-    }
-  };
-
   if (isUpdate) {
     return (
       <FolderInput
@@ -91,10 +94,11 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
   return (
     <>
       <FolderContextMenu
+        shareText={isShareFolder ? '비공개하기' : '공개하기'}
         showRenameInput={() => {
           setIsUpdate(true);
         }}
-        shareFolder={handleShareFolder}
+        onClickShareFolder={handleOpenShareDialog}
         onShow={() => {
           selectSingleFolder(id);
         }}
@@ -105,15 +109,17 @@ export const FolderListItem = ({ id, name }: FolderInfoItemProps) => {
             href={ROUTES.FOLDER_DETAIL(id)}
             isSelected={isSelected}
             isHovered={isHover}
-            icon={isSelected ? FolderOpenIcon : FolderClosedIcon}
+            icon={folderIcon}
             name={name}
             onClick={(event) => handleClick(id, event)}
           />
         </FolderDraggable>
       </FolderContextMenu>
-      {isDialogOpen && (
-        <ShareFolderDialog onClose={handleDialogClose} uuid={uuid} />
-      )}
+      <ShareFolderDialog
+        uuid={uuid}
+        isOpen={isOpenShareDialog}
+        onOpenChange={onCloseShareDialog}
+      />
       <MoveFolderToRecycleBinDialog
         deleteFolderId={id}
         isOpen={isOpenRemoveDialog}
