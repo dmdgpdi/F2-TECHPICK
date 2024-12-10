@@ -159,6 +159,18 @@ export const useTreeStore = create<TreeState & TreeAction>()(
             state.treeDataMap[parentFolderId].childFolderIdOrderedList =
               prevChildIdOrderedList;
           });
+        } finally {
+          set((state) => {
+            const newTreeDataMap: FolderMapType = {};
+
+            for (const [key, value] of Object.entries(state.treeDataMap)) {
+              if (0 < Number(key)) {
+                newTreeDataMap[key] = value;
+              }
+            }
+
+            state.treeDataMap = newTreeDataMap;
+          });
         }
       },
       readFolder: () => {},
@@ -238,7 +250,7 @@ export const useTreeStore = create<TreeState & TreeAction>()(
             return basicFolderMap['UNCLASSIFIED'];
           case ROUTES.FOLDERS_RECYCLE_BIN:
             return basicFolderMap.RECYCLE_BIN;
-          case ROUTES.FOLDERS_ROOT:
+          case ROUTES.RECOMMEND:
             return basicFolderMap.ROOT;
           default: {
             // '/folders/unclassified' or /folders/recycle-bin | /folders/folderId'
