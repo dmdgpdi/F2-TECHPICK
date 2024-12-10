@@ -6,6 +6,7 @@ import { FolderContentLayout } from '@/components/FolderContentLayout';
 import { RecommendedPickCarousel } from '@/components/RecommendedPickCarousel/RecommendedPickCarousel';
 import {
   useClearSelectedPickIdsOnMount,
+  useFetchTagList,
   useResetPickFocusOnOutsideClick,
 } from '@/hooks';
 import { useTreeStore } from '@/stores';
@@ -28,6 +29,7 @@ export default function RecommendPage() {
   useClearSelectedPickIdsOnMount();
   const [suggestionRankingPicks, setSuggestionRankingPicks] =
     useState<GetSuggestionRankingPicksResponseType>();
+  useFetchTagList();
 
   useEffect(
     function selectRootFolderId() {
