@@ -2,7 +2,7 @@ import DOMPurify from 'dompurify';
 import { notifyError, notifySuccess } from '@/libs/@toast';
 import { useChangeFocusUsingArrowKey } from '@/hooks';
 import { useTagStore } from '@/stores';
-import { FolderType, TagType } from '@/types';
+import { FolderType } from '@/types';
 import { updatePick } from '@/apis';
 import { TagPicker } from '@/components';
 import { ThumbnailImage } from './ThumbnailImage';
@@ -25,7 +25,7 @@ import { PUBLIC_DOMAIN } from '@/constants';
 export function UpdatePickForm({
   id,
   title,
-  tagList,
+
   imageUrl,
   folderId,
   folderInfoList,
@@ -34,7 +34,8 @@ export function UpdatePickForm({
   const tagPickerRef = useRef<HTMLDivElement>(null);
   const folderSelectRef = useRef<HTMLButtonElement>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
-  const { selectedTagList, replaceSelectedTagList } = useTagStore();
+  const { selectedTagList } = useTagStore();
+
   useChangeFocusUsingArrowKey([
     titleInputRef,
     tagPickerRef,
@@ -49,13 +50,6 @@ export function UpdatePickForm({
     `${currentSelectedFolderInfo?.id ?? folderInfoList[0].id}`
   );
 
-  useEffect(
-    function onUpdatePickFormLoad() {
-      replaceSelectedTagList(tagList);
-    },
-    [tagList, replaceSelectedTagList]
-  );
-
   useEffect(() => {
     if (titleInputRef.current) {
       titleInputRef.current.focus();
@@ -65,9 +59,14 @@ export function UpdatePickForm({
   const onSubmit = () => {
     const userModifiedTitle = titleInputRef.current?.value ?? '';
 
+    if (userModifiedTitle.trim() === '') {
+      notifyError('제목이 비어있는 상태로 수정할 수 없습니다.');
+      return;
+    }
+
     updatePick({
       id,
-      title: DOMPurify.sanitize(userModifiedTitle),
+      title: DOMPurify.sanitize(userModifiedTitle.trim()),
       tagIdOrderedList: selectedTagList.map((tag) => tag.id),
       parentFolderId: Number(selectedFolderId),
     })
@@ -131,7 +130,6 @@ export function UpdatePickForm({
 interface UpdatePickFormProps {
   id: number;
   title: string;
-  tagList: TagType[];
   imageUrl: string;
   folderId: number;
   folderInfoList: FolderType[];
