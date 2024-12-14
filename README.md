@@ -1,6 +1,10 @@
 # 바구니(Baguni)
 웹에서 지식을 찾는 사람들을 위한 링크 관리 유틸리티
 
+## 소스 코드
+- [Backend Release Branch](https://github.com/Kernel360/F2-BAGUNI/tree/be-release)
+- [Backend Develop Branch](https://github.com/Kernel360/F2-BAGUNI/tree/be-develop)
+
 ## 팀원 소개
 | **[팀장 : 김민규](https://github.com/kimminkyeu)** | **[팀원 : 김승태](https://github.com/dmdgpdi)** | **[팀원 : 오송민](https://github.com/obvoso)** | **[팀원 : 박수형](https://github.com/Gyaak)** | **[팀원 : 양상원](https://github.com/sangwonsheep)** |
 | :-: | :-: | :-: | :-: | :-: |
@@ -59,6 +63,8 @@ Chrome 북마크바를 대체하는 유틸리티성 SaaS 애플리케이션
     </div>
 </div>
 
+
+
 ## 협업 관련 자료
-[Github Discussion](https://github.com/Kernel360/F2-TECHPICK/discussions) <br>
-[Github Wiki](https://github.com/Kernel360/F2-TECHPICK/wiki)
+###  [:speech_balloon: Github Discussion](https://github.com/Kernel360/F2-TECHPICK/discussions)
+###  [:book: Github Wiki](https://github.com/Kernel360/F2-TECHPICK/wiki)
