@@ -66,7 +66,7 @@ export function PickRecord({ pickInfo }: PickViewItemComponentProps) {
       <PickImageColumnLayout>
         <div className={pickImageStyle}>
           {link.imageUrl && link.imageUrl !== '' ? (
-            <Image src={link.imageUrl} alt="" fill sizes="96px" />
+            <img src={link.imageUrl} alt="" sizes="96px" />
           ) : (
             <Image src={'/image/default_image.svg'} alt="" fill sizes="96px" />
           )}

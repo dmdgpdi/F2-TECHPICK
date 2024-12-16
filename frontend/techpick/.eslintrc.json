@@ -58,6 +58,7 @@
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
     ],
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+    "@next/next/no-img-element": "off"
   }
 }
