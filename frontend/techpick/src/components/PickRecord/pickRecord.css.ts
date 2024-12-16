@@ -60,3 +60,5 @@ export const externalLinkIconStyle = style({
   cursor: 'pointer',
   color: colorVars.white,
 });
+
+export const imageStyle = style({ objectFit: 'cover' });

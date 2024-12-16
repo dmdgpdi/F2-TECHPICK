@@ -16,6 +16,7 @@ import {
   dateTextStyle,
   externalLinkIconStyle,
   linkLayoutStyle,
+  imageStyle,
 } from './pickRecord.css';
 import { PickRecordTitleInput } from './PickRecordTitleInput';
 import { PickTagColumnLayout } from './PickTagColumnLayout';
@@ -66,7 +67,13 @@ export function PickRecord({ pickInfo }: PickViewItemComponentProps) {
       <PickImageColumnLayout>
         <div className={pickImageStyle}>
           {link.imageUrl && link.imageUrl !== '' ? (
-            <img src={link.imageUrl} alt="" sizes="96px" />
+            <img
+              src={link.imageUrl}
+              alt=""
+              width="96px"
+              height="47.25px"
+              className={imageStyle}
+            />
           ) : (
             <Image src={'/image/default_image.svg'} alt="" fill sizes="96px" />
           )}
