@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { FilterIcon } from 'lucide-react';
+import { OPEN_SEARCH_DIALOG_EVENT } from '@/constants';
 import { useSearchPickStore } from '@/stores/searchPickStore';
 import { eventEmitter } from '@/utils/eventEmitter';
-import FilterToggleContainer from './FilterToggleContainer';
+import FilterContainer from './FilterContainer';
 import HoverCard from './HoverCard';
 import * as styles from './searchDialog.css';
 import { SearchInfiniteScrollList } from './SearchInfiniteScrollList';
@@ -14,11 +14,7 @@ export default function SearchDialog({
   isOpen,
   onOpenChange,
 }: SearchDialogProps) {
-  const [filterVisible, setFilterVisible] = useState(false);
   const { preFetchSearchPicks, reset } = useSearchPickStore();
-  const toggleFilter = () => {
-    setFilterVisible(!filterVisible);
-  };
 
   useEffect(function prefetching() {
     preFetchSearchPicks();
@@ -28,10 +24,10 @@ export default function SearchDialog({
    * @description 이벤트를 구독하고, emit으로 발생시킨 이벤트를 받으면 상태를 변경합니다.
    */
   useEffect(() => {
-    eventEmitter.on('open-search-dialog', onOpenChange);
+    eventEmitter.on(OPEN_SEARCH_DIALOG_EVENT, onOpenChange);
 
     return () => {
-      eventEmitter.off('open-search-dialog', onOpenChange);
+      eventEmitter.off(OPEN_SEARCH_DIALOG_EVENT, onOpenChange);
     };
   }, [isOpen]);
 
@@ -50,14 +46,8 @@ export default function SearchDialog({
           </DialogPrimitive.Title>
           <div className={styles.searchBar}>
             <SearchInput />
-            <button
-              className={styles.iconButtonContainer}
-              onClick={toggleFilter}
-            >
-              <FilterIcon size={20} />
-            </button>
           </div>
-          <FilterToggleContainer isVisible={filterVisible} />
+          <FilterContainer />
           <div className={styles.searchListContainer}>
             <SearchInfiniteScrollList onClose={handleOnClose} />
             <HoverCard />
