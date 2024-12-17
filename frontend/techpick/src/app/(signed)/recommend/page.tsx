@@ -21,6 +21,7 @@ import {
   recommendPageTitleStyle,
   recommendContentSectionStyle,
   recommendPageDescriptionStyle,
+  recommendPageDescriptionSectionStyle,
 } from './page.css';
 import { RecommendLoadingPage } from './RecommendLoadingPage';
 import { GetSuggestionRankingPicksResponseType } from '@/types';
@@ -63,10 +64,12 @@ export default function RecommendPage() {
       <TutorialDialog />
 
       <div className={recommendSectionLayoutStyle}>
-        <h1 className={recommendPageTitleStyle}>이런 글은 어떠세요?</h1>
-        <p className={recommendPageDescriptionStyle}>
-          다른 유저들이 무엇을 보는지 알아보세요!
-        </p>
+        <div className={recommendPageDescriptionSectionStyle}>
+          <h1 className={recommendPageTitleStyle}>이런 글은 어떠세요?</h1>
+          <p className={recommendPageDescriptionStyle}>
+            다른 유저들이 무엇을 보는지 알아보세요!
+          </p>
+        </div>
 
         <div className={recommendContentSectionStyle}>
           {suggestionRankingPicks.dailyViewRanking.length !== 0 && (

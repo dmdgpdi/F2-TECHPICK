@@ -31,14 +31,22 @@ export const recommendPageTitleStyle = style({
   fontWeight: '700',
 });
 
+export const recommendPageDescriptionSectionStyle = style({
+  display: 'flex',
+  alignItems: 'end',
+  gap: '8px',
+});
+
 export const recommendPageDescriptionStyle = style({
   paddingTop: '4px',
   fontSize: '12px',
   color: colorVars.sand11,
+  paddingBottom: '4px',
 });
 
 export const recommendContentSectionStyle = style({
   height: 'calc(100vh - 92px)',
+  paddingTop: '12px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-around',
