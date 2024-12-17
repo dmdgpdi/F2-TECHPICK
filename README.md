@@ -1,11 +1,10 @@
 # 바구니(Baguni)
 웹사이트 링크를 깔끔하게 정리하는 북마크 앱
 
-## 팀 소개 페이지
+## 팀 소개 페이지 [🔗 Notion](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
 
 [<img width="1008" alt="image" src="https://github.com/user-attachments/assets/13bb4baf-d298-4dc8-9bdc-7ba2687f8d87" />](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
 
-### [:clipboard: Notion](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
 
 ## 팀원 소개
 | **[팀장 : 김민규](https://github.com/kimminkyeu)** | **[팀원 : 김승태](https://github.com/dmdgpdi)** | **[팀원 : 오송민](https://github.com/obvoso)** | **[팀원 : 박수형](https://github.com/Gyaak)** | **[팀원 : 양상원](https://github.com/sangwonsheep)** |
