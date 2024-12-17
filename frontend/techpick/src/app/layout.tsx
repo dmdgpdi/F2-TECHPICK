@@ -7,8 +7,8 @@ import '@/styles/reset.css';
 
 const notoSansKR = Noto_Sans_KR({ weight: 'variable', subsets: ['latin'] });
 export const metadata: Metadata = {
-  title: '바구니 Baguni',
-  description: 'quick save, view anywhere',
+  title: '바구니 | 깔끔한 북마크 관리',
+  description: '깔끔한 북마크 관리, 바구니',
   icons: {
     icon: '/favicon.ico',
   },
