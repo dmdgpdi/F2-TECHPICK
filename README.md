@@ -74,7 +74,7 @@
 
 ## 운영 서버
 ### [:link: Frontend](https://github.com/Kernel360/F2-BAGUNI/tree/frontend)
-### [:link: Backend](https://github.com/Kernel360/F2-BAGUNI/tree/be-release)
+### [:link: Backend](https://github.com/Kernel360/F2-BAGUNI/tree/be-develop)
 
 
 
