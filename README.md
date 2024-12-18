@@ -2,8 +2,8 @@
 웹사이트 링크를 깔끔하게 정리하는 북마크 앱
 
 ## 팀 소개 페이지 [🔗 Notion](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
+[<img width="1464" alt="스크린샷 2024-12-18 오후 12 19 13" src="https://github.com/user-attachments/assets/2d1f8c70-fd90-4f4b-9494-3cf1e2f5813a" />](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
 
-[<img width="1008" alt="image" src="https://github.com/user-attachments/assets/13bb4baf-d298-4dc8-9bdc-7ba2687f8d87" />](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
 
 
 ## 팀원 소개
@@ -11,7 +11,6 @@
 | :-: | :-: | :-: | :-: | :-: |
 | <a href="https://github.com/enigsuss"><img src="https://avatars.githubusercontent.com/kimminkyeu" width=200px /> | <a href="https://github.com/dmdgpdi"><img src="https://avatars.githubusercontent.com/dmdgpdi" width=200px /> | <a href="https://github.com/kimminkyeu"><img src="https://avatars.githubusercontent.com/obvoso" width=200px /> | <a href="https://github.com/Gyaak"><img src="https://avatars.githubusercontent.com/Gyaak" width=200px /> | <a href="https://github.com/sangwonsheep"><img src="https://avatars.githubusercontent.com/sangwonsheep" width=200px /> |
 | Backend | Frontend | Frontend | Backend | Backend |
-| 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 |
 
 
 
