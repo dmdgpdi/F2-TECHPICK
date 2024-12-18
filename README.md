@@ -28,7 +28,9 @@
 
 ## 서비스 소개
 ### 소개 영상
-[![스크린샷 2024-12-18 오전 11 29 00](https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e)](https://www.youtube.com/watch?v=B_YmzsozZ_Y)
+<a href="https://www.youtube.com/watch?v=B_YmzsozZ_Y" target="_blank">
+    <img src="https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e" alt="">
+</a>
 
 ### 익스텐션
 ![익스텐션](https://github.com/user-attachments/assets/43f880b9-14b0-4ea2-808d-3bc460d2e9d2)
