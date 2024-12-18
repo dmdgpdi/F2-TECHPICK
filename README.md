@@ -32,7 +32,7 @@
     <img src="https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e">
 </a>
 
-### 익스텐션
+### 익스텐션으로 편리하게 북마크를 담아요
 ![익스텐션](https://github.com/user-attachments/assets/43f880b9-14b0-4ea2-808d-3bc460d2e9d2)
 
 ### 북마크를 추천해줘요
