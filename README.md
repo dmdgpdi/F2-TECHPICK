@@ -27,6 +27,8 @@
 노션은 링크를 자유롭게 저장할 수 있지만 링크 자체 검색이 되지 않아 필요할 때 다시 찾지 못하는 경우가 자주 발생합니다.
 
 ## 서비스 소개
+### 소개 영상
+[![스크린샷 2024-12-18 오전 11 29 00](https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e)](https://www.youtube.com/watch?v=B_YmzsozZ_Y)
 
 ### 익스텐션
 ![익스텐션](https://github.com/user-attachments/assets/43f880b9-14b0-4ea2-808d-3bc460d2e9d2)
