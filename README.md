@@ -35,10 +35,10 @@
 ### 익스텐션으로 편리하게 북마크를 담아요
 ![익스텐션](https://github.com/user-attachments/assets/43f880b9-14b0-4ea2-808d-3bc460d2e9d2)
 
-### 북마크를 추천해줘요
+### 추천해주는 북마크를 담을 수 있어요
 ![추천](https://github.com/user-attachments/assets/2a428230-1dd4-4a72-939c-ff3afb8b6185)   
 
-### 검색할 수 있어요
+### 저장한 북마크를 검색할 수 있어요
 ![태그 검색](https://github.com/user-attachments/assets/358b343f-8f40-484d-9714-af83dfc15b1e)
 
 
