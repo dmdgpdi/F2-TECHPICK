@@ -2,7 +2,7 @@
 웹사이트 링크를 깔끔하게 정리하는 북마크 앱
 
 ## 팀 소개 페이지 [🔗 Notion](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
-[<img width="1464" alt="스크린샷 2024-12-18 오후 12 19 13" src="https://github.com/user-attachments/assets/2d1f8c70-fd90-4f4b-9494-3cf1e2f5813a" />](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
+[<img width="1464" alt="스크린샷 2024-12-18 오후 12 19 13" src="https://github.com/user-attachments/assets/2d1f8c70-fd90-4f4b-9494-3cf1e2f5813a" />](https://app.baguni.kr/)
 
 
 
