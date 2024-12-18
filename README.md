@@ -29,7 +29,7 @@
 ## 서비스 소개
 ### 소개 영상
 <a href="https://www.youtube.com/watch?v=B_YmzsozZ_Y" target="_blank">
-    <img src="https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e" alt="">
+    <img src="https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e" attributes="#">
 </a>
 
 ### 익스텐션
