@@ -33,16 +33,10 @@
 ### 익스텐션
 ![익스텐션](https://github.com/user-attachments/assets/43f880b9-14b0-4ea2-808d-3bc460d2e9d2)
 
-### Drag & Drop
-![미분류 dnd](https://github.com/user-attachments/assets/ba47441a-eb8f-4fc2-b257-956214693f36)   
-
-### 추천
+### 북마크를 추천해줘요
 ![추천](https://github.com/user-attachments/assets/2a428230-1dd4-4a72-939c-ff3afb8b6185)   
 
-### 공유
-![공유하기](https://github.com/user-attachments/assets/76333040-2a52-4597-bc6e-d36b115b5c64)
-
-### 검색
+### 검색할 수 있어요
 ![태그 검색](https://github.com/user-attachments/assets/358b343f-8f40-484d-9714-af83dfc15b1e)
 
 
