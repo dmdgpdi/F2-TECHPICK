@@ -28,8 +28,10 @@
 
 ## 서비스 소개
 ### 소개 영상
+<a href="https://www.youtube.com/watch?v=B_YmzsozZ_Y" target="_blank">
+    <img src="https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e"></img>
+</a>
 
-[![스크린샷 2024-12-18 오전 11 29 00](https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e)](https://www.youtube.com/watch?v=B_YmzsozZ_Y){:target="_blank"}
 
 
 ### 익스텐션
