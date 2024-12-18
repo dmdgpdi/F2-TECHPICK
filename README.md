@@ -40,10 +40,7 @@
 ### 공유
 ![공유하기](https://github.com/user-attachments/assets/76333040-2a52-4597-bc6e-d36b115b5c64)
 
-### 제목 검색
-![제목 검색](https://github.com/user-attachments/assets/889d4c52-c0e5-4da9-b216-7fbf15bafd83)
-
-### 태그 검색
+### 검색
 ![태그 검색](https://github.com/user-attachments/assets/358b343f-8f40-484d-9714-af83dfc15b1e)
 
 
