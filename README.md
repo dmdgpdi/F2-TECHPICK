@@ -44,31 +44,10 @@
         <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white"/>
         <img src="https://img.shields.io/badge/Zustand-6492FE?style=for-the-badge&logo=Zustand&logoColor=white"/>
     </div>
-    <p><strong>Backend</strong></p>
-    <div>
-        <img src="https://img.shields.io/badge/Java_17-007396?style=for-the-badge&logo=java&logoColor=white"> 
-        <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring boot&logoColor=white">
-        <img src="https://img.shields.io/badge/spring_Data_JPA-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
-        <img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=spring security&logoColor=white">
-    </div>
-    <p><strong>Database</strong></p>
-    <div>
-        <img src="https://img.shields.io/badge/Mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-        <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white">
-        <img src="https://img.shields.io/badge/OpenSearch-005EB8?style=for-the-badge&logo=opensearch&logoColor=white"/>
-    </div>
     <p><strong>Infra</strong></p>
     <div>
         <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Amazon ECS-FF9900?style=for-the-badge&logo=amazon ecs&logoColor=white"/>
         <img src="https://img.shields.io/badge/Github Action-2088FF?style=for-the-badge&logo=github action&logoColor=white"/>
-    </div>
-    <p><strong>Others</strong></p>
-    <div>
-        <img src="https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Logstash-005571?style=for-the-badge&logo=logstash&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Beats-005571?style=for-the-badge&logo=beats&logoColor=white"/>
     </div>
 </div>
 
