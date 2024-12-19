@@ -9,7 +9,7 @@
 ## 팀원 소개
 | **[팀장 : 김민규](https://github.com/kimminkyeu)** | **[팀원 : 김승태](https://github.com/dmdgpdi)** | **[팀원 : 오송민](https://github.com/obvoso)** | **[팀원 : 박수형](https://github.com/Gyaak)** | **[팀원 : 양상원](https://github.com/sangwonsheep)** |
 | :-: | :-: | :-: | :-: | :-: |
-| <a href="https://github.com/enigsuss"><img src="https://avatars.githubusercontent.com/kimminkyeu" width=200px /> | <a href="https://github.com/dmdgpdi"><img src="https://avatars.githubusercontent.com/dmdgpdi" width=200px /> | <a href="https://github.com/kimminkyeu"><img src="https://avatars.githubusercontent.com/obvoso" width=200px /> | <a href="https://github.com/Gyaak"><img src="https://avatars.githubusercontent.com/Gyaak" width=200px /> | <a href="https://github.com/sangwonsheep"><img src="https://avatars.githubusercontent.com/sangwonsheep" width=200px /> |
+| <a href="https://github.com/kimminkyeu"><img src="https://avatars.githubusercontent.com/kimminkyeu" width=200px /> | <a href="https://github.com/dmdgpdi"><img src="https://avatars.githubusercontent.com/dmdgpdi" width=200px /> | <a href="https://github.com/obvoso"><img src="https://avatars.githubusercontent.com/obvoso" width=200px /> | <a href="https://github.com/Gyaak"><img src="https://avatars.githubusercontent.com/Gyaak" width=200px /> | <a href="https://github.com/sangwonsheep"><img src="https://avatars.githubusercontent.com/sangwonsheep" width=200px /> |
 | Backend | Frontend | Frontend | Backend | Backend |
 
 
