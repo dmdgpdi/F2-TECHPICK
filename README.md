@@ -16,8 +16,9 @@
 
 ## 프로젝트 소개
 ### 만들게 된 계기
-- 배경 : 블로그 링크들을 모아가며 공부하는 우리들
-- 문제 : 북마크가 많아지면 관리하기 어렵다
+<img width="785" alt="스크린샷 2024-12-19 오전 11 52 34" src="https://github.com/user-attachments/assets/125acbeb-312d-4cdd-ada9-108b237d8593" />
+<img width="542" alt="스크린샷 2024-12-19 오전 11 52 42" src="https://github.com/user-attachments/assets/0dcd1a24-2f14-466b-823b-12cd430acabc" />
+
 
 ## 서비스 소개
 ### 소개 영상
