@@ -2,35 +2,39 @@
 웹사이트 링크를 깔끔하게 정리하는 북마크 앱
 
 ## 팀 소개 페이지 [🔗 Notion](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
+[<img width="1464" alt="스크린샷 2024-12-18 오후 12 19 13" src="https://github.com/user-attachments/assets/2d1f8c70-fd90-4f4b-9494-3cf1e2f5813a" />](https://app.baguni.kr/)
 
-[<img width="1008" alt="image" src="https://github.com/user-attachments/assets/13bb4baf-d298-4dc8-9bdc-7ba2687f8d87" />](https://positive-airboat-4de.notion.site/Baguni-15841a7fba6580c59591e2d5d1c2414b)
 
 
 ## 팀원 소개
 | **[팀장 : 김민규](https://github.com/kimminkyeu)** | **[팀원 : 김승태](https://github.com/dmdgpdi)** | **[팀원 : 오송민](https://github.com/obvoso)** | **[팀원 : 박수형](https://github.com/Gyaak)** | **[팀원 : 양상원](https://github.com/sangwonsheep)** |
 | :-: | :-: | :-: | :-: | :-: |
-| <a href="https://github.com/enigsuss"><img src="https://avatars.githubusercontent.com/kimminkyeu" width=200px /> | <a href="https://github.com/dmdgpdi"><img src="https://avatars.githubusercontent.com/dmdgpdi" width=200px /> | <a href="https://github.com/kimminkyeu"><img src="https://avatars.githubusercontent.com/obvoso" width=200px /> | <a href="https://github.com/Gyaak"><img src="https://avatars.githubusercontent.com/Gyaak" width=200px /> | <a href="https://github.com/sangwonsheep"><img src="https://avatars.githubusercontent.com/sangwonsheep" width=200px /> |
+| <a href="https://github.com/kimminkyeu"><img src="https://avatars.githubusercontent.com/kimminkyeu" width=200px /> | <a href="https://github.com/dmdgpdi"><img src="https://avatars.githubusercontent.com/dmdgpdi" width=200px /> | <a href="https://github.com/obvoso"><img src="https://avatars.githubusercontent.com/obvoso" width=200px /> | <a href="https://github.com/Gyaak"><img src="https://avatars.githubusercontent.com/Gyaak" width=200px /> | <a href="https://github.com/sangwonsheep"><img src="https://avatars.githubusercontent.com/sangwonsheep" width=200px /> |
 | Backend | Frontend | Frontend | Backend | Backend |
-| 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 | 본인이 맡은 일을<br>적어 주세요 |
 
 
 
 ## 프로젝트 소개
-### 배경 : 블로그 링크들을 모아가며 공부하는 우리들
-모르는 건 웬만하면 구글 검색으로 다 배울 수 있는 요즘 시대.    
-남들보다 더 빨리 배우고 성장하기 위해 좋은 기술 블로그 글들과 유튜브 동영상들을 수집하는 사람들을    
-더 편하게 해주는 방법에 대해 고민했습니다.   
+### 만들게 된 계기
+<img width="785" alt="스크린샷 2024-12-19 오전 11 52 34" src="https://github.com/user-attachments/assets/125acbeb-312d-4cdd-ada9-108b237d8593" />
+<img width="542" alt="스크린샷 2024-12-19 오전 11 52 42" src="https://github.com/user-attachments/assets/0dcd1a24-2f14-466b-823b-12cd430acabc" />
 
-### 문제 : 북마크가 많아지면 관리하기 어렵다
-저희는 링크 정리에 크롬 북마크나 노션을 많이 이용합니다.   
-이때 크롬은 폴더별로 링크 저장은 가능하나 태그 별 검색을 못합니다.   
-노션은 링크를 자유롭게 저장할 수 있지만 링크 자체 검색이 되지 않아 필요할 때 다시 찾지 못하는 경우가 자주 발생합니다.
 
 ## 서비스 소개
+### 소개 영상
+<a href="https://www.youtube.com/watch?v=B_YmzsozZ_Y" target="_blank">
+    <img src="https://github.com/user-attachments/assets/d8f3686f-4771-4e35-bff8-2bac008ebd2e">
+</a>
 
-### 익스텐션
+### 익스텐션으로 편리하게 북마크를 담아요
+![익스텐션](https://github.com/user-attachments/assets/43f880b9-14b0-4ea2-808d-3bc460d2e9d2)
 
-### 웹사이트
+### 추천해주는 북마크를 담을 수 있어요
+![추천](https://github.com/user-attachments/assets/2a428230-1dd4-4a72-939c-ff3afb8b6185)   
+
+### 저장한 북마크를 검색할 수 있어요
+![태그 검색](https://github.com/user-attachments/assets/358b343f-8f40-484d-9714-af83dfc15b1e)
+
 
 ## 아키텍처
 ![architecture](https://github.com/user-attachments/assets/93fd8100-5a30-4ff8-a0f6-02bad789630f)
@@ -61,7 +65,6 @@
     <div>
         <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
         <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Amazon ECS-FF9900?style=for-the-badge&logo=amazon ecs&logoColor=white"/>
         <img src="https://img.shields.io/badge/Github Action-2088FF?style=for-the-badge&logo=github action&logoColor=white"/>
     </div>
     <p><strong>Others</strong></p>
@@ -73,8 +76,8 @@
 </div>
 
 ## 운영 서버
-### [:link: Frontend](https://github.com/Kernel360/F2-BAGUNI/tree/frontend)
-### [:link: Backend](https://github.com/Kernel360/F2-BAGUNI/tree/be-release)
+### [:link: Frontend](https://github.com/Kernel360/F2-BAGUNI/tree/fe-develop)
+### [:link: Backend](https://github.com/Kernel360/F2-BAGUNI/tree/be-develop)
 
 
 
