@@ -65,7 +65,6 @@
     <div>
         <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
         <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"/>
-        <img src="https://img.shields.io/badge/Amazon ECS-FF9900?style=for-the-badge&logo=amazon ecs&logoColor=white"/>
         <img src="https://img.shields.io/badge/Github Action-2088FF?style=for-the-badge&logo=github action&logoColor=white"/>
     </div>
     <p><strong>Others</strong></p>
